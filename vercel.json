@@ -4,5 +4,42 @@
       "path": "/api/cron/generate-news",
       "schedule": "0 */2 * * *"
     }
+  ],
+  "redirects": [
+    {
+      "source": "/fractional-:path*",
+      "destination": "/destinations",
+      "permanent": true
+    },
+    {
+      "source": "/interim-:path*",
+      "destination": "/destinations",
+      "permanent": true
+    },
+    {
+      "source": "/guide",
+      "destination": "/guides",
+      "permanent": true
+    },
+    {
+      "source": "/fractionaljobsuk",
+      "destination": "/jobs",
+      "permanent": true
+    },
+    {
+      "source": "/uk-fractional-:path*",
+      "destination": "/destinations",
+      "permanent": true
+    },
+    {
+      "source": "/top-fractional-:path*",
+      "destination": "/destinations",
+      "permanent": true
+    },
+    {
+      "source": "/part-time-:path*",
+      "destination": "/jobs",
+      "permanent": true
+    }
   ]
 }
