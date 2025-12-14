@@ -39,10 +39,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/jobs/dubai`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/jobs/australia`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/jobs/canada`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/services/corporate-relocation`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/services/employee-relocation`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
     },
     {
       url: `${baseUrl}/calculator`,
@@ -76,7 +100,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Destination pages (manually list the 6 we have)
+  // Destination pages (manually list the 7 we have)
   const destinationPages: MetadataRoute.Sitemap = [
     'portugal',
     'spain',
@@ -84,6 +108,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     'mexico',
     'costa-rica',
     'germany',
+    'cyprus',
   ].map((country) => ({
     url: `${baseUrl}/destinations/${country}`,
     lastModified: new Date(),
@@ -91,9 +116,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.85,
   }))
 
+  // High-value guide pages
+  const highValueGuides: MetadataRoute.Sitemap = [
+    {
+      url: `${baseUrl}/guides/what-is-corporate-relocation`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/guides/moving-to-cyprus`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.85,
+    },
+  ]
+
   try {
     if (!process.env.DATABASE_URL) {
-      return [...staticPages, ...destinationPages]
+      return [...staticPages, ...destinationPages, ...highValueGuides]
     }
 
     const sql = neon(process.env.DATABASE_URL)
@@ -118,7 +159,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }
     })
 
-    return [...staticPages, ...destinationPages, ...guideUrls]
+    return [...staticPages, ...destinationPages, ...highValueGuides, ...guideUrls]
   } catch (error) {
     console.error('Error generating sitemap:', error)
     // Return static pages if database query fails
