@@ -83,17 +83,10 @@ export default async function ArticleDetailPage({ params }: PageProps) {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           {/* Breadcrumb */}
           <nav className="mb-8">
-            <Link href="/fractional-jobs-articles" className="text-purple-200 hover:text-white transition-colors text-sm">
+            <Link href="/articles" className="text-purple-200 hover:text-white transition-colors text-sm">
               ← Back to Articles
             </Link>
           </nav>
-
-          {/* Category Badge */}
-          <div className="mb-6">
-            <Badge variant="primary" size="md" className="bg-purple-600/50 text-white border border-purple-400/30">
-              Fractional Executive Guide
-            </Badge>
-          </div>
 
           {/* Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6">
@@ -158,24 +151,9 @@ export default async function ArticleDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
 
-        {/* CTA Section */}
-        <div className="mt-12 bg-gradient-to-r from-purple-600 to-purple-700 rounded-2xl p-8 md:p-10 text-white">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <h3 className="text-2xl font-bold mb-2">Ready to find fractional talent?</h3>
-              <p className="text-purple-100">Browse our curated list of fractional executive opportunities.</p>
-            </div>
-            <Link href="/fractional-jobs">
-              <button className="px-8 py-4 bg-white text-purple-700 rounded-xl font-bold hover:bg-purple-50 transition-colors whitespace-nowrap shadow-lg">
-                Browse Jobs →
-              </button>
-            </Link>
-          </div>
-        </div>
-
         {/* Back Link */}
         <div className="mt-12 pt-8 border-t border-gray-200 flex justify-between items-center">
-          <Link href="/fractional-jobs-articles" className="text-purple-700 hover:text-purple-900 font-medium flex items-center gap-2">
+          <Link href="/articles" className="text-purple-700 hover:text-purple-900 font-medium flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
