@@ -2,14 +2,14 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Relocation Quest | International Relocation Services, Visa Guides & Jobs',
-  description: 'Your complete guide to international relocation. Discover visa options, cost of living, job opportunities, and expert services across 50+ destinations worldwide.',
+  title: 'Relocation Quest | Corporate Relocation Services & Digital Nomad Visa Cyprus',
+  description: 'Expert corporate relocation services and digital nomad visa guidance for Cyprus and 50+ destinations. Find visa sponsorship, cost analysis, and international job opportunities for your relocation.',
   alternates: {
     canonical: 'https://relocation.quest',
   },
   openGraph: {
-    title: 'Relocation Quest | Your Complete International Relocation Guide',
-    description: 'Discover visa options, cost of living, and job opportunities across 50+ destinations.',
+    title: 'Relocation Quest | Corporate Relocation & Digital Nomad Visa Guide',
+    description: 'Corporate relocation services, digital nomad visa options for Cyprus, visa sponsorship, and expert relocation planning for international moves.',
     url: 'https://relocation.quest',
     siteName: 'Relocation Quest',
     type: 'website',
@@ -25,12 +25,43 @@ const jsonLd = {
   '@type': 'WebSite',
   name: 'Relocation Quest',
   url: 'https://relocation.quest',
-  description: 'Complete guide to international relocation with visa guides, cost calculators, and job opportunities.',
+  description: 'Expert corporate relocation services and digital nomad visa guidance. Plan international relocations with visa sponsorship, cost analysis, and job opportunities across 50+ destinations including Cyprus.',
+  keywords: 'corporate relocation, relocation services, digital nomad visa, Cyprus relocation, visa sponsorship, international relocation',
   potentialAction: {
     '@type': 'SearchAction',
     target: 'https://relocation.quest/destinations?q={search_term_string}',
     'query-input': 'required name=search_term_string',
   },
+  mainEntity: {
+    '@type': 'LocalBusiness',
+    name: 'Relocation Quest',
+    description: 'Corporate relocation services and digital nomad visa consulting',
+    serviceType: ['Corporate Relocation Services', 'Visa Sponsorship Consulting', 'Digital Nomad Visa Support', 'International Relocation Planning'],
+    areaServed: [
+      'Portugal', 'Spain', 'Dubai', 'Canada', 'Australia', 'Cyprus', 'United Kingdom',
+      'European Union', 'North America', 'Middle East', 'Asia Pacific'
+    ],
+    url: 'https://relocation.quest',
+    email: 'hello@relocation.quest',
+  },
+  service: [
+    {
+      '@type': 'Service',
+      name: 'Corporate Relocation Services',
+      description: 'Comprehensive corporate relocation solutions for businesses and executives relocating internationally',
+      provider: { '@type': 'Organization', name: 'Relocation Quest' },
+      serviceArea: 'Worldwide',
+      areaServed: ['United Kingdom', 'European Union', 'North America'],
+    },
+    {
+      '@type': 'Service',
+      name: 'Digital Nomad Visa Services',
+      description: 'Expert guidance on digital nomad visas including Cyprus, Portugal, Spain, and other destinations',
+      provider: { '@type': 'Organization', name: 'Relocation Quest' },
+      serviceArea: 'Worldwide',
+      areaServed: ['Cyprus', 'Portugal', 'Spain', 'European Union', 'Middle East'],
+    },
+  ],
 }
 
 const featuredDestinations = [

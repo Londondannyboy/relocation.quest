@@ -31,11 +31,11 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Relocation Quest | International Relocation Services, Visa Guides & Jobs",
+    default: "Relocation Quest | Corporate Relocation Services & Digital Nomad Visa Guide",
     template: "%s | Relocation Quest"
   },
-  description: "Your complete guide to international relocation. Discover visa options, cost of living, job opportunities, and expert services across 50+ destinations worldwide.",
-  keywords: ["international relocation", "relocation services", "visa guides", "digital nomad visa", "expat jobs", "relocation cost calculator", "moving abroad", "work visa", "immigration guide", "relocation tax allowance"],
+  description: "Expert relocation and corporate relocation services. Discover digital nomad visa options for Cyprus and 50+ destinations, visa sponsorship, cost of living guides, and international job opportunities.",
+  keywords: ["relocation", "corporate relocation", "corporate relocation services", "relocation services", "digital nomad visa", "digital nomad visa Cyprus", "Cyprus relocation", "visa guides", "visa sponsorship", "expat jobs", "international relocation", "relocation cost calculator", "moving abroad", "work visa", "immigration guide", "relocation tax allowance", "Cyprus digital nomad", "international relocation services"],
   authors: [{ name: "Relocation Quest" }],
   creator: "Relocation Quest",
   publisher: "Relocation Quest",
@@ -48,14 +48,14 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://relocation.quest",
     siteName: "Relocation Quest",
-    title: "Relocation Quest | International Relocation Services & Visa Guides",
-    description: "Your complete guide to international relocation. Discover visa options, cost of living, and job opportunities across 50+ destinations.",
+    title: "Relocation Quest | Corporate Relocation Services & Digital Nomad Visa Guide",
+    description: "Expert corporate relocation services and digital nomad visa guidance. Plan your move to Cyprus, find visa sponsorship, and explore 50+ relocation destinations.",
     // Images auto-generated from app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
-    title: "Relocation Quest | International Relocation Guide",
-    description: "Your complete guide to international relocation. Visa guides, cost calculators, and job opportunities across 50+ destinations.",
+    title: "Relocation Quest | Corporate Relocation & Digital Nomad Visas",
+    description: "Corporate relocation services, digital nomad visa options including Cyprus, and expert relocation guidance for international moves.",
     site: "@relocationquest",
     creator: "@relocationquest",
     // Images auto-generated from app/twitter-image.tsx
