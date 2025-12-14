@@ -66,6 +66,24 @@ const nextConfig: NextConfig = {
 
   images: {
     unoptimized: true, // For Vercel deployment
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.pexels.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.pexels.com',
+      },
+    ],
   },
 
   // Optimize CSS and package imports for modern browsers
