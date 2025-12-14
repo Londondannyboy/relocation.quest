@@ -36,7 +36,7 @@ async function getArticle(slug: string): Promise<Article | null> {
         AND app = 'relocation'
       LIMIT 1
     `
-    return articles[0] || null
+    return (articles[0] as Article) || null
   } catch {
     return null
   }
