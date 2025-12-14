@@ -264,8 +264,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         {article.video_playback_id ? (
           <div className="relative">
             <ArticleVideo playbackId={article.video_playback_id} />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent pointer-events-none" />
-            <div className="absolute inset-0 bg-gradient-to-r from-white/80 via-transparent to-white/80 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10 pointer-events-none" />
 
             {/* Title overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 pointer-events-none">
@@ -294,8 +294,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent" />
-              <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-white/60" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/10 via-transparent to-black/10" />
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
               <div className="max-w-4xl mx-auto">

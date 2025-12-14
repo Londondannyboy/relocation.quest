@@ -14,9 +14,8 @@ interface StaticFooterProps {
 
 const defaultLinks: FooterLink[] = [
   { href: '/guides', label: 'Guides' },
-  { href: '/move-to-europe', label: 'Move to Europe' },
-  { href: '/articles', label: 'Articles' },
-  { href: '/chat', label: 'Chat' },
+  { href: '/destinations', label: 'Destinations' },
+  { href: '/calculator', label: 'Calculator' },
   { href: '/privacy', label: 'Privacy' },
 ]
 

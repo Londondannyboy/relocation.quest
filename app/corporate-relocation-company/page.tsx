@@ -446,7 +446,7 @@ export default function CorporateRelocationCompanyPage() {
               },
               {
                 q: 'How are relocation costs handled - company vs employee?',
-                a: 'Typically company covers all or most costs. Tax treatment varies by country. Consult a tax advisor on what's deductible vs taxable income.',
+                a: 'Typically company covers all or most costs. Tax treatment varies by country. Consult a tax advisor on what is deductible vs taxable income.',
               },
             ].map((faq, idx) => (
               <details key={idx} className="group bg-white rounded-xl p-6 hover:bg-gray-100 transition border border-gray-200">

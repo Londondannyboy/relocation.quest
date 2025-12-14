@@ -19,6 +19,7 @@ export function Navigation() {
   }, [])
 
   const navLinks = [
+    { href: '/articles', label: 'Articles' },
     { href: '/destinations', label: 'Destinations' },
     { href: '/guides', label: 'Guides' },
     { href: '/jobs', label: 'Jobs' },
