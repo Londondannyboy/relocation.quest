@@ -29,6 +29,9 @@ importers:
       d3:
         specifier: ^7.9.0
         version: 7.9.0
+      force-graph:
+        specifier: ^1.51.0
+        version: 1.51.0
       globe.gl:
         specifier: ^2.45.0
         version: 2.45.0
