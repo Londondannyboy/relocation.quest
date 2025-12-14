@@ -8,10 +8,11 @@ const CONFIG_ID = process.env.NEXT_PUBLIC_HUME_CONFIG_ID || 'd0e862f0-20f7-487e-
 export interface UserProfile {
   first_name: string | null
   current_country: string | null
+  destination_countries?: string[] | null
   budget_monthly?: number | null
   budget?: string | null
   timeline: string | null
-  interests: string[] | null
+  interests?: string[] | null
   neon_auth_id?: string | null
 }
 
