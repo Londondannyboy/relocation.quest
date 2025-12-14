@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get articles without hero images
-    const articles = await sql<Article[]>`
+    const articles = await sql`
       SELECT id, title, slug, excerpt, country, category
       FROM articles
       WHERE app = 'relocation'
@@ -140,7 +140,7 @@ export async function POST(request: NextRequest) {
         AND hero_asset_url IS NULL
       ORDER BY published_at DESC
       LIMIT 50
-    `;
+    ` as Article[];
 
     if (articles.length === 0) {
       return NextResponse.json({ message: 'No articles without hero images found' });
