@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { marked } from 'marked'
 
 export const revalidate = 3600
 
@@ -52,6 +53,9 @@ export default async function ArticlePage({ params }: PageProps) {
   const article = await getArticle(slug)
   if (!article) notFound()
 
+  // Convert markdown to HTML
+  const htmlContent = article.content ? await marked(article.content) : null
+
   const readingTime = article.word_count ? Math.ceil(article.word_count / 200) : null
   const formattedDate = article.published_at
     ? new Date(article.published_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
@@ -89,18 +93,21 @@ export default async function ArticlePage({ params }: PageProps) {
 
       {/* Content */}
       <div className="max-w-3xl mx-auto px-6 py-12">
-        {article.content ? (
+        {htmlContent ? (
           <div
             className="prose prose-lg max-w-none 
               prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-h2:text-gray-900
               prose-h3:text-2xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3 prose-h3:text-gray-900
+              prose-h4:text-xl prose-h4:font-bold prose-h4:mt-4 prose-h4:mb-2
               prose-p:text-gray-700 prose-p:mb-4 prose-p:leading-relaxed
               prose-a:text-amber-600 prose-a:no-underline hover:prose-a:text-amber-700
               prose-strong:text-gray-900 prose-strong:font-bold
-              prose-ul:my-4 prose-li:text-gray-700
-              prose-blockquote:border-l-4 prose-blockquote:border-amber-500 prose-blockquote:pl-4 prose-blockquote:italic
-              prose-code:text-amber-600 prose-code:bg-gray-100 prose-code:px-1.5 prose-code:rounded"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+              prose-ul:my-4 prose-ul:pl-6 prose-li:text-gray-700
+              prose-ol:my-4 prose-ol:pl-6
+              prose-blockquote:border-l-4 prose-blockquote:border-amber-500 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-600
+              prose-code:text-amber-600 prose-code:bg-gray-100 prose-code:px-1.5 prose-code:rounded prose-code:text-sm
+              prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-lg prose-pre:p-4 prose-pre:overflow-x-auto"
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         ) : (
           <p className="text-gray-500">No content available.</p>
