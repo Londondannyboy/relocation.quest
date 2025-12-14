@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { neon } from '@neondatabase/serverless'
 import { notFound } from 'next/navigation'
+import { marked } from 'marked'
 
 const GATEWAY_URL = process.env.GATEWAY_URL || process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://quest-gateway-production.up.railway.app'
 
@@ -83,6 +84,9 @@ export default async function ArticlePage({ params }: PageProps) {
 
   const backLink = article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'
 
+  // Convert markdown to HTML
+  const htmlContent = article.content ? await marked(article.content) : ''
+
   return (
     <main className="min-h-screen bg-white">
       {article.hero_asset_url && (
@@ -101,7 +105,7 @@ export default async function ArticlePage({ params }: PageProps) {
           {article.excerpt && <p className="text-xl text-gray-600">{article.excerpt}</p>}
         </header>
 
-        {article.content && (
+        {htmlContent && (
           <div
             className="prose prose-lg max-w-none mb-12
               prose-headings:font-bold prose-headings:text-gray-900
@@ -112,7 +116,7 @@ export default async function ArticlePage({ params }: PageProps) {
               prose-strong:text-gray-900
               prose-ul:my-4 prose-li:text-gray-700
             "
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: htmlContent }}
           />
         )}
 
