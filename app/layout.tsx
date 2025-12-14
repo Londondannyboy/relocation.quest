@@ -31,33 +31,33 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fractional Jobs UK | CFO, CTO, CMO Roles | Fractional Quest",
-    template: "%s | Fractional Quest"
+    default: "Relocation Quest | International Relocation Services, Visa Guides & Jobs",
+    template: "%s | Relocation Quest"
   },
-  description: "Discover the best fractional jobs in the UK. Browse fractional CFO, CMO, CTO and executive roles in London. Connect with leading fractional recruitment agencies and find flexible leadership opportunities.",
-  keywords: ["fractional jobs", "fractional jobs UK", "fractional CFO", "fractional CTO", "fractional CMO", "fractional COO", "fractional executive", "part-time executive", "fractional recruitment agencies", "London fractional jobs"],
-  authors: [{ name: "Fractional Quest" }],
-  creator: "Fractional Quest",
-  publisher: "Fractional Quest",
-  metadataBase: new URL("https://fractional.quest"),
+  description: "Your complete guide to international relocation. Discover visa options, cost of living, job opportunities, and expert services across 50+ destinations worldwide.",
+  keywords: ["international relocation", "relocation services", "visa guides", "digital nomad visa", "expat jobs", "relocation cost calculator", "moving abroad", "work visa", "immigration guide", "relocation tax allowance"],
+  authors: [{ name: "Relocation Quest" }],
+  creator: "Relocation Quest",
+  publisher: "Relocation Quest",
+  metadataBase: new URL("https://relocation.quest"),
   alternates: {
-    canonical: "https://fractional.quest",
+    canonical: "https://relocation.quest",
   },
   openGraph: {
     type: "website",
-    locale: "en_GB",
-    url: "https://fractional.quest",
-    siteName: "Fractional Quest",
-    title: "Fractional Jobs UK | CFO, CTO, CMO Roles",
-    description: "Discover the best fractional jobs in the UK. Browse fractional CFO, CMO, CTO and executive roles in London.",
+    locale: "en_US",
+    url: "https://relocation.quest",
+    siteName: "Relocation Quest",
+    title: "Relocation Quest | International Relocation Services & Visa Guides",
+    description: "Your complete guide to international relocation. Discover visa options, cost of living, and job opportunities across 50+ destinations.",
     // Images auto-generated from app/opengraph-image.tsx
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fractional Jobs UK | Fractional Quest",
-    description: "Discover the best fractional jobs in the UK. Browse fractional CFO, CMO, CTO and executive roles.",
-    site: "@fractionalquest",
-    creator: "@fractionalquest",
+    title: "Relocation Quest | International Relocation Guide",
+    description: "Your complete guide to international relocation. Visa guides, cost calculators, and job opportunities across 50+ destinations.",
+    site: "@relocationquest",
+    creator: "@relocationquest",
     // Images auto-generated from app/twitter-image.tsx
   },
   robots: {
@@ -77,27 +77,27 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": "https://fractional.quest/#organization",
-  name: "Fractional Quest",
-  alternateName: ["Fractional Quest", "FractionalQuest"],
-  url: "https://fractional.quest",
+  "@id": "https://relocation.quest/#organization",
+  name: "Relocation Quest",
+  alternateName: ["Relocation Quest", "RelocationQuest"],
+  url: "https://relocation.quest",
   logo: {
     "@type": "ImageObject",
-    url: "https://fractional.quest/logo.svg",
+    url: "https://relocation.quest/logo.svg",
     width: "512",
     height: "512"
   },
-  image: "https://fractional.quest/logo.svg",
-  description: "UK marketplace for fractional jobs and executive services. Browse fractional CFO, CTO, CMO roles or hire fractional executives.",
+  image: "https://relocation.quest/logo.svg",
+  description: "Complete guide to international relocation. Find visa information, cost of living data, job opportunities, and expert relocation services across 50+ destinations.",
   foundingDate: "2024",
   sameAs: [
-    "https://twitter.com/fractionalquest",
-    "https://linkedin.com/company/fractionalquest"
+    "https://twitter.com/relocationquest",
+    "https://linkedin.com/company/relocationquest"
   ],
   contactPoint: {
     "@type": "ContactPoint",
     contactType: "customer service",
-    url: "https://fractional.quest/contact",
+    url: "https://relocation.quest/contact",
     availableLanguage: "English"
   },
   areaServed: {

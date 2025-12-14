@@ -9,17 +9,17 @@ export function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-4">
             <Link href="/" className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-gray-600 to-gray-800 rounded-xl flex items-center justify-center">
-                <span className="text-white font-black text-2xl">F</span>
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-green-600 rounded-xl flex items-center justify-center">
+                <span className="text-white font-black text-2xl">R</span>
               </div>
               <div>
-                <span className="font-bold text-white text-xl">Fractional</span>
+                <span className="font-bold text-white text-xl">Relocation</span>
                 <span className="text-gray-400 font-bold text-xl">.Quest</span>
               </div>
             </Link>
             <p className="text-gray-400 leading-relaxed mb-6">
-              The UK's emerging platform connecting companies with fractional executives.
-              Find your next CFO, CTO, CMO, or COO on a part-time basis.
+              Your complete guide to international relocation. Discover visa options,
+              cost of living, job opportunities, and expert services across 50+ destinations.
             </p>
             <div className="flex gap-4">
               <a
@@ -50,35 +50,35 @@ export function Footer() {
           {/* Navigation Columns */}
           <div className="lg:col-span-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {/* For Executives */}
+              {/* For Individuals */}
               <div>
                 <h4 className="font-semibold text-white mb-4 text-sm uppercase tracking-wide">
-                  For Executives
+                  For Individuals
                 </h4>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/fractional-jobs" className="text-gray-400 hover:text-white text-sm transition-colors">
+                    <Link href="/destinations" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Explore Destinations
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/calculator" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Cost Calculator
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/jobs" className="text-gray-400 hover:text-white text-sm transition-colors">
                       Browse Jobs
                     </Link>
                   </li>
                   <li>
-                    <Link href="/calculators/rate-finder" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Rate Calculator
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/calculators/portfolio-builder" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Portfolio Planner
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/guide" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Getting Started Guide
+                    <Link href="/guides" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Relocation Guides
                     </Link>
                   </li>
                   <li>
                     <Link href="/handler/sign-up" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Join Beta
+                      Get Started
                     </Link>
                   </li>
                 </ul>
@@ -91,23 +91,23 @@ export function Footer() {
                 </h4>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/calculators/company-savings" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Savings Calculator
+                    <Link href="/services/corporate-relocation" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Corporate Relocation
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cfo" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Fractional CFO
+                    <Link href="/services/visa-sponsorship" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Visa Sponsorship
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cto" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Fractional CTO
+                    <Link href="/services/global-mobility" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Global Mobility
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cmo" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Fractional CMO
+                    <Link href="/services/talent-relocation" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Talent Relocation
                     </Link>
                   </li>
                   <li>
@@ -118,35 +118,35 @@ export function Footer() {
                 </ul>
               </div>
 
-              {/* Locations */}
+              {/* Popular Destinations */}
               <div>
                 <h4 className="font-semibold text-white mb-4 text-sm uppercase tracking-wide">
-                  Locations
+                  Popular Destinations
                 </h4>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/fractional-jobs-london" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      London
+                    <Link href="/destinations/portugal" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Portugal
                     </Link>
                   </li>
                   <li>
-                    <Link href="/fractional-jobs-manchester" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Manchester
+                    <Link href="/destinations/spain" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Spain
                     </Link>
                   </li>
                   <li>
-                    <Link href="/fractional-jobs-birmingham" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Birmingham
+                    <Link href="/destinations/dubai" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Dubai
                     </Link>
                   </li>
                   <li>
-                    <Link href="/fractional-jobs-edinburgh" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Edinburgh
+                    <Link href="/destinations/canada" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Canada
                     </Link>
                   </li>
                   <li>
-                    <Link href="/remote" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Remote Jobs
+                    <Link href="/destinations/australia" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Australia
                     </Link>
                   </li>
                 </ul>
@@ -159,18 +159,18 @@ export function Footer() {
                 </h4>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/articles" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      Articles
+                    <Link href="/guides/relocation-tax-allowances" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Tax Guides
                     </Link>
                   </li>
                   <li>
-                    <Link href="/calculators" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      All Calculators
+                    <Link href="/guides" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      All Guides
                     </Link>
                   </li>
                   <li>
-                    <Link href="/voice" className="text-gray-400 hover:text-white text-sm transition-colors">
-                      AI Assistant
+                    <Link href="/calculator" className="text-gray-400 hover:text-white text-sm transition-colors">
+                      Cost Calculator
                     </Link>
                   </li>
                   <li>
@@ -195,12 +195,12 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
-              © {new Date().getFullYear()} Fractional Quest. All rights reserved. Built in the UK.
+              © {new Date().getFullYear()} Relocation Quest. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
               <span className="text-xs text-gray-400 flex items-center gap-2">
                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                Beta — Launching December 2025
+                Beta — Launching 2025
               </span>
             </div>
           </div>
