@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Hire Operations Consultants UK | Fractional Operations Experts',
   description: 'Hire experienced operations consultants on a fractional basis. Expert operations professionals for scaling, process improvement, and efficiency. Available part-time.',
   keywords: 'operations consultants, hire operations consultant, fractional operations expert, operations consultant uk, business operations consultant',
-  alternates: { canonical: 'https://fractional.quest/operations-consultants' },
+  alternates: { canonical: 'https://relocation.quest/operations-consultants' },
 }
 
 export default function OperationsConsultantsPage() {

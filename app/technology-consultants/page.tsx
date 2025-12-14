@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Hire Technology Consultants UK | Fractional Tech Experts',
   description: 'Hire experienced technology consultants on a fractional basis. Expert tech professionals for architecture, engineering leadership, and digital transformation. Available part-time.',
   keywords: 'technology consultants, hire tech consultant, fractional technology expert, it consultant uk, technical strategy consultant',
-  alternates: { canonical: 'https://fractional.quest/technology-consultants' },
+  alternates: { canonical: 'https://relocation.quest/technology-consultants' },
 }
 
 export default function TechnologyConsultantsPage() {

@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Fractional Quest',
+  title: 'Privacy Policy | Relocation Quest',
 }
 
 export default function PrivacyPage() {
@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Introduction</h2>
           <p>
-            Fractional Quest ("we," "us," or "our") operates the Fractional Quest website. This Privacy Policy explains our
+            Relocation Quest ("we," "us," or "our") operates the Relocation Quest website. This Privacy Policy explains our
             data practices and your privacy rights.
           </p>
         </section>
@@ -54,8 +54,8 @@ export default function PrivacyPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Contact Us</h2>
           <p>
             If you have questions about this Privacy Policy, please contact us at{' '}
-            <a href="mailto:privacy@fractional.quest" className="text-purple-700 hover:text-purple-900">
-              privacy@fractional.quest
+            <a href="mailto:privacy@relocation.quest" className="text-purple-700 hover:text-purple-900">
+              privacy@relocation.quest
             </a>
           </p>
         </section>

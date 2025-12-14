@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { Button } from '@/components/Button'
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Fractional Quest',
-  description: 'Get in touch with Fractional Quest. Whether you\'re a job seeker or hiring company.',
+  title: 'Contact Us | Relocation Quest',
+  description: 'Get in touch with Relocation Quest. Whether you\'re a job seeker or hiring company.',
 }
 
 export default function ContactPage() {

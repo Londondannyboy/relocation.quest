@@ -34,7 +34,7 @@ async function searchArticles(query: string): Promise<Article[]> {
     const articles = await sql`
       SELECT slug, title, meta_description, LEFT(content, 500) as content
       FROM articles
-      WHERE status = 'published' AND app = 'fractional'
+      WHERE status = 'published' AND app = 'relocation'
       ORDER BY created_at DESC
       LIMIT 3
     `
@@ -48,7 +48,7 @@ async function searchArticles(query: string): Promise<Article[]> {
     SELECT slug, title, meta_description, LEFT(content, 500) as content
     FROM articles
     WHERE status = 'published'
-      AND app = 'fractional'
+      AND app = 'relocation'
       AND (
         title ~* ${searchPattern}
         OR meta_description ~* ${searchPattern}

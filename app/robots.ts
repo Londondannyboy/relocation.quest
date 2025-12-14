@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://fractional.quest'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://relocation.quest'
 
   return {
     rules: [

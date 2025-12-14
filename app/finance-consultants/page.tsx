@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Hire Finance Consultants UK | Fractional Finance Experts',
   description: 'Hire experienced finance consultants on a fractional basis. Expert financial professionals for FP&A, fundraising, and financial strategy. Available part-time.',
   keywords: 'finance consultants, hire finance consultant, fractional finance expert, finance consultant uk, financial strategy consultant',
-  alternates: { canonical: 'https://fractional.quest/finance-consultants' },
+  alternates: { canonical: 'https://relocation.quest/finance-consultants' },
 }
 
 export default function FinanceConsultantsPage() {

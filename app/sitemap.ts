@@ -4,7 +4,7 @@ import { createDbQuery } from '@/lib/db'
 export const revalidate = 3600 // Revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://fractional.quest'
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://relocation.quest'
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
@@ -550,7 +550,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Fetch all published articles
     const articles = await sql`
       SELECT slug, published_at FROM articles
-      WHERE status = 'published' AND app = 'fractional'
+      WHERE status = 'published' AND app = 'relocation'
       ORDER BY published_at DESC
       LIMIT 500
     `

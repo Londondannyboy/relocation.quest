@@ -64,7 +64,7 @@ export async function RoleNews({
     SELECT id, slug, title, excerpt, category, article_type,
            featured_asset_url, published_at
     FROM articles
-    WHERE app = 'fractional'
+    WHERE app = 'relocation'
       AND status = 'published'
       AND category = ${category}
     ORDER BY published_at DESC
@@ -162,7 +162,7 @@ export async function RoleNewsCompact({
   const articles = await sql`
     SELECT id, slug, title, article_type, published_at
     FROM articles
-    WHERE app = 'fractional'
+    WHERE app = 'relocation'
       AND status = 'published'
       AND category = ${category}
     ORDER BY published_at DESC
@@ -206,7 +206,7 @@ export async function LatestNews({ limit = 6 }: { limit?: number }) {
       SELECT id, slug, title, excerpt, category, article_type,
              featured_asset_url, published_at
       FROM articles
-      WHERE app = 'fractional'
+      WHERE app = 'relocation'
         AND status = 'published'
       ORDER BY published_at DESC
       LIMIT ${limit}

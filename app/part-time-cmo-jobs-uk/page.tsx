@@ -17,12 +17,12 @@ export const metadata: Metadata = {
   description: 'Part-time CMO jobs UK - Find flexible Chief Marketing Officer positions paying £700-£1,400/day. Browse live part-time CMO roles for experienced marketing leaders. Remote & hybrid available.',
   keywords: 'part time cmo jobs, part-time cmo jobs uk, part time chief marketing officer, cmo part time, flexible cmo roles, part time cmo uk, part-time cmo opportunities',
   alternates: {
-    canonical: 'https://fractional.quest/part-time-cmo-jobs-uk',
+    canonical: 'https://relocation.quest/part-time-cmo-jobs-uk',
   },
   openGraph: {
     title: 'Part-Time CMO Jobs UK | Flexible Chief Marketing Officer Roles',
     description: 'Part-time CMO jobs UK - Find flexible CMO positions paying £700-£1,400/day. Remote & hybrid available.',
-    url: 'https://fractional.quest/part-time-cmo-jobs-uk',
+    url: 'https://relocation.quest/part-time-cmo-jobs-uk',
   },
 }
 

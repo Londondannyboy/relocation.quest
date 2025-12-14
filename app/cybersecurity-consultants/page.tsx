@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Hire Cybersecurity Consultants UK | Fractional Security Experts',
   description: 'Hire experienced cybersecurity consultants on a fractional basis. Expert security professionals for compliance, risk assessment, and security programmes. Available part-time.',
   keywords: 'cybersecurity consultants, hire cybersecurity consultant, fractional security expert, cybersecurity consultant uk, information security consultant',
-  alternates: { canonical: 'https://fractional.quest/cybersecurity-consultants' },
+  alternates: { canonical: 'https://relocation.quest/cybersecurity-consultants' },
 }
 
 export default function CybersecurityConsultantsPage() {

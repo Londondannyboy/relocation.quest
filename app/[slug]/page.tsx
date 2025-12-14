@@ -28,7 +28,7 @@ async function getArticle(slug: string) {
       FROM articles
       WHERE slug = ${slug}
         AND status = 'published'
-        AND app = 'fractional'
+        AND app = 'relocation'
       LIMIT 1
     `
     return articles[0] || null
@@ -43,12 +43,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const article = await getArticle(slug)
 
   if (!article) {
-    return { title: 'Article Not Found | Fractional Quest' }
+    return { title: 'Article Not Found | Relocation Quest' }
   }
 
   return {
-    title: `${article.title} | Fractional Quest`,
-    description: article.meta_description || article.excerpt || 'Read this article on Fractional Quest',
+    title: `${article.title} | Relocation Quest`,
+    description: article.meta_description || article.excerpt || 'Read this article on Relocation Quest',
   }
 }
 

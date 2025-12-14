@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Fractional Executive Calculators | Day Rate, Savings & Portfolio Tools',
   description: 'Free calculators for fractional executives and companies. Calculate day rates, company savings vs full-time hires, and plan your portfolio career. Essential tools for the UK fractional market.',
   alternates: {
-    canonical: 'https://fractional.quest/calculators'
+    canonical: 'https://relocation.quest/calculators'
   }
 }
 

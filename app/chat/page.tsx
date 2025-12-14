@@ -36,8 +36,8 @@ export default function ChatPage() {
     {
       role: 'assistant',
       content: firstName
-        ? `Hi ${firstName}! I'm your Fractional Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?`
-        : "Hi! I'm your Fractional Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?",
+        ? `Hi ${firstName}! I'm your Relocation Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?`
+        : "Hi! I'm your Relocation Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?",
     },
   ])
   const [input, setInput] = useState('')
@@ -56,7 +56,7 @@ export default function ChatPage() {
     if (firstName && messages.length === 1 && messages[0].role === 'assistant') {
       setMessages([{
         role: 'assistant',
-        content: `Hi ${firstName}! I'm your Fractional Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?`,
+        content: `Hi ${firstName}! I'm your Relocation Quest assistant. I can help you find information about fractional jobs, answer questions about our articles, and provide guidance on fractional executive careers. What would you like to know?`,
       }])
     }
   }, [firstName, messages.length])

@@ -109,25 +109,25 @@ const organizationJsonLd = {
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "Fractional Quest",
-  alternateName: ["Fractional Quest", "FractionalQuest", "Fractional Jobs UK"],
-  url: "https://fractional.quest",
+  name: "Relocation Quest",
+  alternateName: ["Relocation Quest", "FractionalQuest", "Fractional Jobs UK"],
+  url: "https://relocation.quest",
   description: "UK marketplace for fractional jobs and executive services. Browse fractional CFO, CMO, CTO roles.",
   inLanguage: "en-GB",
   publisher: {
     "@type": "Organization",
-    name: "Fractional Quest",
-    url: "https://fractional.quest",
+    name: "Relocation Quest",
+    url: "https://relocation.quest",
     logo: {
       "@type": "ImageObject",
-      url: "https://fractional.quest/logo.svg"
+      url: "https://relocation.quest/logo.svg"
     }
   },
   potentialAction: {
     "@type": "SearchAction",
     target: {
       "@type": "EntryPoint",
-      urlTemplate: "https://fractional.quest/fractional-jobs?q={search_term_string}"
+      urlTemplate: "https://relocation.quest/fractional-jobs?q={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   }

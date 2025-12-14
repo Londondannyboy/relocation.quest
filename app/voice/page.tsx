@@ -16,7 +16,7 @@ function VoiceInterface({ accessToken }: { accessToken: string }) {
       })
       // Send session settings after connection
       sendSessionSettings({
-        systemPrompt: `You are a helpful assistant for Fractional Quest, a UK-based platform for fractional executive jobs.
+        systemPrompt: `You are a helpful assistant for Relocation Quest, a UK-based platform for fractional executive jobs.
         Help users find fractional jobs (CFO, CMO, CTO, COO, HR Director positions), answer questions about fractional work,
         day rates (typically £800-1500/day), and the UK market. Be conversational and helpful.
         You can discuss topics like: fractional vs full-time work, typical engagement lengths,

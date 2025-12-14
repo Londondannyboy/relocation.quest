@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Hire Marketing Consultants UK | Fractional Marketing Experts',
   description: 'Hire experienced marketing consultants on a fractional basis. Expert marketing professionals for strategy, brand, digital, and growth. Available part-time.',
   keywords: 'marketing consultants, hire marketing consultant, fractional marketing expert, marketing consultant uk, marketing strategy consultant',
-  alternates: { canonical: 'https://fractional.quest/marketing-consultants' },
+  alternates: { canonical: 'https://relocation.quest/marketing-consultants' },
 }
 
 export default function MarketingConsultantsPage() {

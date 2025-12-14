@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: CompanyPageProps): Promise<Me
   }
 
   return {
-    title: `${company.company_name} Jobs | Fractional Quest`,
+    title: `${company.company_name} Jobs | Relocation Quest`,
     description: `Browse fractional and part-time jobs at ${company.company_name}. Find executive roles, day rates, and flexible opportunities.`,
     openGraph: {
       title: `${company.company_name} - Fractional Jobs`,

@@ -17,12 +17,12 @@ export const metadata: Metadata = {
   description: 'Part-time CFO jobs UK - Find flexible Chief Financial Officer positions paying £800-£1,500/day. Browse live part-time CFO roles for experienced finance leaders. Remote & hybrid available.',
   keywords: 'part time cfo jobs, part-time cfo jobs uk, part time chief financial officer, cfo part time, flexible cfo roles, part time cfo uk, part-time cfo opportunities',
   alternates: {
-    canonical: 'https://fractional.quest/part-time-cfo-jobs-uk',
+    canonical: 'https://relocation.quest/part-time-cfo-jobs-uk',
   },
   openGraph: {
     title: 'Part-Time CFO Jobs UK | Flexible Chief Financial Officer Roles',
     description: 'Part-time CFO jobs UK - Find flexible CFO positions paying £800-£1,500/day. Remote & hybrid available.',
-    url: 'https://fractional.quest/part-time-cfo-jobs-uk',
+    url: 'https://relocation.quest/part-time-cfo-jobs-uk',
   },
 }
 

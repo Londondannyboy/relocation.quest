@@ -246,7 +246,7 @@ async function searchJobs(params: {
         }
       }
       // Add link to job (using slug for SEO-friendly URLs)
-      if (j.slug) desc += ` - View at fractional.quest/job/${j.slug}`
+      if (j.slug) desc += ` - View at relocation.quest/job/${j.slug}`
       return desc
     }).join('. ')
 
@@ -365,7 +365,7 @@ async function searchArticles(params: {
     const articleDescriptions = articles.map(a => {
       let desc = a.title
       if (a.category) desc += ` (${a.category})`
-      if (a.slug) desc += ` - Read at fractional.quest/articles/${a.slug}`
+      if (a.slug) desc += ` - Read at relocation.quest/articles/${a.slug}`
       return desc
     }).join('. ')
 
