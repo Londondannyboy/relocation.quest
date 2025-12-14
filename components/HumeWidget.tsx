@@ -91,7 +91,7 @@ function VoiceWidget({
         first_name: userName || '',
         is_authenticated: isAuthenticated ? 'true' : 'false',
         current_country: userProfile?.current_country || '',
-        interests: userProfile?.interests?.join(', ') || '',
+        destination_countries: userProfile?.destination_countries?.join(', ') || '',
         timeline: userProfile?.timeline || '',
         budget: budgetStr
       }
