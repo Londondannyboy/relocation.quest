@@ -57,7 +57,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.85,
     },
     {
+      url: `${baseUrl}/jobs/relocation-packages`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/jobs/international`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/services/corporate-relocation`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/corporate-relocation-companies`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/relocation-companies-uk`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
@@ -129,6 +153,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.85,
+    },
+    {
+      url: `${baseUrl}/guides/cyprus-expat-jobs`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
     },
   ]
 
