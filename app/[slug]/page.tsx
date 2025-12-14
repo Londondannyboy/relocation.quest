@@ -2,9 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { createDbQuery } from '@/lib/db'
 import { notFound } from 'next/navigation'
-import { Badge } from '@/components/Badge'
+import styles from './article-styles.module.css'
 
-// Revalidate every 4 hours for articles
 export const revalidate = 14400
 
 interface Article {
@@ -61,11 +60,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     title: `${article.title} | Relocation Quest`,
-    description: article.meta_description || article.excerpt || 'Read this article on Relocation Quest',
+    description: article.excerpt || article.title,
   }
 }
 
-export default async function ArticleDetailPage({ params }: PageProps) {
+export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
   const article = await getArticle(slug)
 
@@ -73,116 +72,32 @@ export default async function ArticleDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  const readingTime = article.word_count ? Math.ceil(article.word_count / 200) : null
-  const formattedDate = article.published_at
-    ? new Date(article.published_at).toLocaleDateString('en-GB', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })
-    : null
+  const backLink = article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'
 
   return (
-    <article className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <header className="relative bg-gradient-to-br from-purple-900 via-purple-800 to-purple-900 text-white">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }} />
-        </div>
+    <div className={styles.wrapper}>
+      <article className={styles.article}>
+        {article.hero_asset_url && (
+          <img
+            src={article.hero_asset_url}
+            alt={article.hero_asset_alt || article.title}
+            className={styles.heroImage}
+          />
+        )}
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          {/* Breadcrumb */}
-          <nav className="mb-8">
-            <Link href={article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'} className="text-purple-200 hover:text-white transition-colors text-sm">
-              ← Back to Articles
-            </Link>
-          </nav>
+        <header className={styles.header}>
+          <h1 className={styles.title}>{article.title}</h1>
+          {article.excerpt && <p className={styles.excerpt}>{article.excerpt}</p>}
+        </header>
 
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-tight mb-6">
-            {article.title}
-          </h1>
+        <div className={styles.content} dangerouslySetInnerHTML={{ __html: article.content || '' }} />
 
-          {/* Excerpt */}
-          {article.excerpt && (
-            <p className="text-xl md:text-2xl text-purple-100 leading-relaxed mb-8 max-w-3xl">
-              {article.excerpt}
-            </p>
-          )}
-
-          {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-4 text-sm text-purple-200">
-            {formattedDate && (
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {formattedDate}
-              </span>
-            )}
-            {readingTime && (
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {readingTime} min read
-              </span>
-            )}
-            {article.word_count && (
-              <span className="flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                {article.word_count.toLocaleString()} words
-              </span>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* Hero Image (if exists) */}
-      {article.hero_asset_url && (
-        <div className="relative -mt-8 max-w-5xl mx-auto px-4">
-          <div className="rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={article.hero_asset_url}
-              alt={article.hero_asset_alt || article.title}
-              className="w-full h-64 md:h-96 object-cover"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Article Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        {/* Article Body with Enhanced Styling */}
-        <div
-          className="article-content bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12"
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
-
-        {/* Back Link */}
-        <div className="mt-12 pt-8 border-t border-gray-200 flex justify-between items-center">
-          <Link href={article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'} className="text-purple-700 hover:text-purple-900 font-medium flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to All Articles
+        <nav className={styles.nav}>
+          <Link href={backLink} className={styles.link}>
+            ← Back to Articles
           </Link>
-          <a
-            href="#top"
-            className="text-gray-600 hover:text-gray-700 flex items-center gap-2"
-          >
-            Back to top
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </article>
+        </nav>
+      </article>
+    </div>
   )
 }
