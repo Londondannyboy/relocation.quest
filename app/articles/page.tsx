@@ -13,6 +13,7 @@ interface Article {
   country: string | null
   flag_emoji: string | null
   video_playback_id: string | null
+  featured_asset_url: string | null
   published_at: string | null
   word_count: number | null
 }
@@ -136,7 +137,8 @@ export default async function ArticlesPage() {
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {modeArticles.map((article, idx) => {
-                  const thumbnail = getThumbnail(article.video_playback_id, 5)
+                  const videoThumbnail = getThumbnail(article.video_playback_id, 5)
+                  const thumbnail = videoThumbnail || article.featured_asset_url
                   const publishDate = article.published_at
                     ? new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
                     : null
