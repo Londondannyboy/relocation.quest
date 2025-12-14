@@ -7,6 +7,21 @@
   ],
   "redirects": [
     {
+      "source": "/relocation/guide/:path*",
+      "destination": "/articles/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/posts/:path*",
+      "destination": "/articles/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/cyprus-requirements-visa",
+      "destination": "/destinations/cyprus",
+      "permanent": true
+    },
+    {
       "source": "/fractional-:path*",
       "destination": "/destinations",
       "permanent": true
