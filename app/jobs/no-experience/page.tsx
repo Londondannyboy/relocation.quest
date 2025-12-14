@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Relocation Jobs No Experience | Entry-Level Opportunities Abroad',
@@ -28,8 +26,8 @@ export const metadata: Metadata = {
 
 export default function NoExperienceJobsPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <Navigation />
+    <>
+      
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white overflow-hidden">
@@ -415,7 +413,6 @@ export default function NoExperienceJobsPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </>
   )
 }

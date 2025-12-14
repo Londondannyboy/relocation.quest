@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Relocation Jobs Worldwide | Find Jobs with Relocation Packages',
@@ -29,8 +27,7 @@ export const metadata: Metadata = {
 
 export default function JobsPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <Navigation />
+    <>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600 text-white overflow-hidden">
@@ -454,8 +451,6 @@ export default function JobsPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </main>
+    </>
   )
 }

@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Jobs with Relocation Packages | Find Positions with Full Moving Support',
@@ -28,8 +26,7 @@ export const metadata: Metadata = {
 
 export default function RelocationPackagesPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <Navigation />
+    <>
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-purple-500 via-pink-500 to-red-500 text-white overflow-hidden">
@@ -523,8 +520,6 @@ export default function RelocationPackagesPage() {
           </div>
         </div>
       </section>
-
-      <Footer />
-    </main>
+    </>
   )
 }

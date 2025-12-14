@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Navigation } from '@/components/Navigation'
-import { Footer } from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Corporate Relocation Services | Employee Mobility Solutions for Businesses',
@@ -29,8 +27,8 @@ export const metadata: Metadata = {
 
 export default function CorporateRelocationPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <Navigation />
+    <>
+      
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 text-white overflow-hidden">
@@ -552,7 +550,6 @@ export default function CorporateRelocationPage() {
         </div>
       </section>
 
-      <Footer />
-    </main>
+      </>
   );
 }
