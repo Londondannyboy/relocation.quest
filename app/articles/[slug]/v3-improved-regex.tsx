@@ -1,8 +1,10 @@
+// VERSION 3: Improved regex with better whitespace handling
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { createDbQuery } from '@/lib/db'
+
+const GATEWAY_URL = process.env.GATEWAY_URL || process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://quest-gateway-production.up.railway.app'
 
 interface Article {
   id: number
@@ -18,35 +20,56 @@ interface Article {
 
 async function getArticle(slug: string): Promise<Article | null> {
   try {
-    const sql = createDbQuery()
-    const articles = await sql`
-      SELECT
-        id,
-        slug,
-        title,
-        excerpt,
-        content,
-        hero_asset_url,
-        hero_asset_alt,
-        published_at,
-        word_count
-      FROM articles
-      WHERE slug = ${slug}
-        AND status = 'published'
-        AND app = 'relocation'
-      LIMIT 1
-    `
-    return articles[0] || null
+    const res = await fetch(`${GATEWAY_URL}/dashboard/content/articles/${slug}`, { next: { revalidate: 3600 } })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.article || null
   } catch {
     return null
   }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const article = await getArticle(slug)
-  if (!article) return { title: 'Article Not Found | Relocation Quest' }
-  return { title: `${article.title} | Relocation Quest`, description: article.excerpt || article.title }
+function convertMarkdownToHtml(markdown: string): string {
+  let html = markdown
+
+  // Headers (must be at start of line, allow whitespace)
+  html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+  html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>')
+  html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+
+  // Bold
+  html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+
+  // Italic
+  html = html.replace(/_(.*?)_/g, '<em>$1</em>')
+
+  // Unordered lists - match lines starting with dash/hyphen
+  html = html.replace(/^- (.*?)$/gm, '<li>$1</li>')
+
+  // Wrap consecutive list items in <ul>
+  html = html.replace(/(<li>.*?<\/li>)/s, '<ul>$1</ul>')
+
+  // Paragraphs - double newlines become paragraph breaks
+  html = html.replace(/\n\n+/g, '</p><p>')
+
+  // Wrap remaining text in paragraphs
+  html = html.split('\n').map(line => {
+    const trimmed = line.trim()
+    if (!trimmed) return ''
+    if (trimmed.match(/^<[hul]/)) return line
+    if (trimmed.match(/^<\/(h|ul|li)>/)) return line
+    return `<p>${line}</p>`
+  }).filter(line => line).join('\n')
+
+  // Remove empty paragraphs
+  html = html.replace(/<p><\/p>/g, '')
+
+  // Add initial <p> tag if needed
+  if (!html.startsWith('<') && html.trim()) {
+    html = '<p>' + html
+  }
+
+  return html
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -59,17 +82,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     ? new Date(article.published_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
     : null
 
+  const htmlContent = convertMarkdownToHtml(article.content || '')
+
   return (
     <article className="min-h-screen bg-white">
       {article.hero_asset_url && (
         <div className="relative w-full h-96 bg-gray-100 overflow-hidden">
-          <Image
-            src={article.hero_asset_url}
-            alt={article.hero_asset_alt || article.title}
-            fill
-            className="object-cover"
-            priority
-          />
+          <Image src={article.hero_asset_url} alt={article.hero_asset_alt || article.title} fill className="object-cover" priority />
         </div>
       )}
 
@@ -95,7 +114,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             prose-strong:font-bold prose-strong:text-gray-900
             prose-ul:my-4 prose-ul:ml-6 prose-li:text-gray-700 prose-li:mb-2
             prose-a:text-amber-600 hover:prose-a:text-amber-700"
-          dangerouslySetInnerHTML={{ __html: article.content || '' }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       </div>
 

@@ -1,8 +1,11 @@
+// VERSION 2: Using marked library for robust markdown parsing
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { createDbQuery } from '@/lib/db'
+import { marked } from 'marked'
+
+const GATEWAY_URL = process.env.GATEWAY_URL || process.env.NEXT_PUBLIC_GATEWAY_URL || 'https://quest-gateway-production.up.railway.app'
 
 interface Article {
   id: number
@@ -18,35 +21,13 @@ interface Article {
 
 async function getArticle(slug: string): Promise<Article | null> {
   try {
-    const sql = createDbQuery()
-    const articles = await sql`
-      SELECT
-        id,
-        slug,
-        title,
-        excerpt,
-        content,
-        hero_asset_url,
-        hero_asset_alt,
-        published_at,
-        word_count
-      FROM articles
-      WHERE slug = ${slug}
-        AND status = 'published'
-        AND app = 'relocation'
-      LIMIT 1
-    `
-    return articles[0] || null
+    const res = await fetch(`${GATEWAY_URL}/dashboard/content/articles/${slug}`, { next: { revalidate: 3600 } })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.article || null
   } catch {
     return null
   }
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-  const article = await getArticle(slug)
-  if (!article) return { title: 'Article Not Found | Relocation Quest' }
-  return { title: `${article.title} | Relocation Quest`, description: article.excerpt || article.title }
 }
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -59,17 +40,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     ? new Date(article.published_at).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })
     : null
 
+  // Use marked library for markdown parsing
+  const htmlContent = await marked(article.content || '')
+
   return (
     <article className="min-h-screen bg-white">
       {article.hero_asset_url && (
         <div className="relative w-full h-96 bg-gray-100 overflow-hidden">
-          <Image
-            src={article.hero_asset_url}
-            alt={article.hero_asset_alt || article.title}
-            fill
-            className="object-cover"
-            priority
-          />
+          <Image src={article.hero_asset_url} alt={article.hero_asset_alt || article.title} fill className="object-cover" priority />
         </div>
       )}
 
@@ -95,7 +73,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             prose-strong:font-bold prose-strong:text-gray-900
             prose-ul:my-4 prose-ul:ml-6 prose-li:text-gray-700 prose-li:mb-2
             prose-a:text-amber-600 hover:prose-a:text-amber-700"
-          dangerouslySetInnerHTML={{ __html: article.content || '' }}
+          dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
       </div>
 
