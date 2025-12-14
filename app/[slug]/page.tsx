@@ -7,6 +7,19 @@ import { Badge } from '@/components/Badge'
 // Revalidate every 4 hours for articles
 export const revalidate = 14400
 
+interface Article {
+  id: number
+  slug: string
+  title: string
+  excerpt: string | null
+  content: string | null
+  hero_asset_url: string | null
+  hero_asset_alt: string | null
+  published_at: string | null
+  word_count: number | null
+  app: string
+}
+
 interface PageProps {
   params: Promise<{ slug: string }>
 }
@@ -24,11 +37,11 @@ async function getArticle(slug: string) {
         hero_asset_url,
         hero_asset_alt,
         published_at,
-        word_count
+        word_count,
+        app
       FROM articles
       WHERE slug = ${slug}
         AND status = 'published'
-        AND app = 'relocation'
       LIMIT 1
     `
     return articles[0] || null
@@ -83,7 +96,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
           {/* Breadcrumb */}
           <nav className="mb-8">
-            <Link href="/articles" className="text-purple-200 hover:text-white transition-colors text-sm">
+            <Link href={article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'} className="text-purple-200 hover:text-white transition-colors text-sm">
               ← Back to Articles
             </Link>
           </nav>
@@ -153,7 +166,7 @@ export default async function ArticleDetailPage({ params }: PageProps) {
 
         {/* Back Link */}
         <div className="mt-12 pt-8 border-t border-gray-200 flex justify-between items-center">
-          <Link href="/articles" className="text-purple-700 hover:text-purple-900 font-medium flex items-center gap-2">
+          <Link href={article.app === 'fractional' ? '/fractional-jobs-articles' : '/articles'} className="text-purple-700 hover:text-purple-900 font-medium flex items-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
