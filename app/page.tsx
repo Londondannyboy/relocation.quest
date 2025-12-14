@@ -130,64 +130,83 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-green-500 to-blue-700 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-blue-900/20" />
+      {/* Hero Section with Video Background */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-b from-slate-950 via-slate-900 to-white">
+        {/* Video Background Layer */}
+        <div className="absolute inset-0 opacity-60">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80')] bg-cover bg-center bg-fixed" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/70 to-slate-950/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white" />
+        </div>
 
-        <div className="relative max-w-6xl mx-auto px-6 text-center">
-          <div className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6">
-            <span className="text-white/90 text-sm font-medium">🌍 Your International Relocation Guide</span>
+        {/* Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-20">
+          <div className="max-w-3xl">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-8 hover:bg-white/20 transition-all">
+              <span className="text-2xl">🌍</span>
+              <span className="text-white/90 text-sm font-medium">Your International Relocation Guide</span>
+            </div>
+
+            {/* Main Headline */}
+            <h1 className="text-6xl lg:text-7xl font-black mb-6 leading-tight text-white tracking-tight">
+              Move Abroad <br />
+              <span className="bg-gradient-to-r from-amber-300 via-orange-300 to-rose-300 bg-clip-text text-transparent">
+                With Confidence
+              </span>
+            </h1>
+
+            {/* Subheadline */}
+            <p className="text-xl lg:text-2xl text-slate-200 max-w-2xl mb-10 leading-relaxed font-light">
+              Discover visa options, compare cost of living, find jobs with sponsorship, and connect with expert relocation services across 50+ destinations worldwide.
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+              <Link
+                href="/destinations"
+                className="group inline-flex items-center justify-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-amber-100 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 duration-300"
+              >
+                Explore Destinations
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+              <Link
+                href="/calculator"
+                className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30 duration-300"
+              >
+                Cost Calculator
+              </Link>
+            </div>
+
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl">
+              {stats.map((stat) => (
+                <div key={stat.label} className="group bg-white/5 backdrop-blur-md rounded-lg p-5 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300">
+                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{stat.icon}</div>
+                  <div className="text-2xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-slate-300 text-xs font-medium">{stat.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
+        </div>
 
-          <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            Move Abroad
-            <br />
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-              With Confidence
-            </span>
-          </h1>
-
-          <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 leading-relaxed">
-            Discover visa options, compare cost of living, find jobs with sponsorship,
-            and connect with expert services across 50+ destinations worldwide.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Link
-              href="/destinations"
-              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              Explore Destinations →
-            </Link>
-            <Link
-              href="/calculator"
-              className="bg-blue-700/50 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700/70 transition-all border border-white/20"
-            >
-              Cost Calculator
-            </Link>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-            {stats.map((stat) => (
-              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                <div className="text-4xl mb-2">{stat.icon}</div>
-                <div className="text-3xl font-black mb-1">{stat.value}</div>
-                <div className="text-blue-100 text-sm">{stat.label}</div>
-              </div>
-            ))}
-          </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+          <svg className="w-6 h-6 text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
         </div>
       </section>
 
       {/* Featured Destinations */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-28 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black mb-4">Popular Destinations</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore comprehensive guides for the world's top relocation destinations
+          <div className="mb-16">
+            <span className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Popular Destinations</span>
+            <h2 className="text-5xl lg:text-6xl font-black text-slate-900 mt-3 leading-tight max-w-2xl">Explore the World's Top Relocation Hubs</h2>
+            <p className="text-lg text-slate-600 max-w-3xl mt-6 font-light leading-relaxed">
+              Comprehensive guides for the world's most sought-after destinations, with detailed visa requirements, cost analysis, and lifestyle insights.
             </p>
           </div>
 
@@ -196,107 +215,114 @@ export default function Home() {
               <Link
                 key={dest.slug}
                 href={`/destinations/${dest.slug}`}
-                className="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all overflow-hidden hover:scale-105"
+                className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-slate-300 transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
               >
-                <div className={`h-40 bg-gradient-to-r ${dest.gradient} flex items-center justify-center`}>
-                  <span className="text-8xl filter drop-shadow-lg group-hover:scale-110 transition-transform">
-                    {dest.flag}
-                  </span>
-                </div>
+                {/* Gradient Background */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${dest.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
 
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold mb-2">{dest.name}</h3>
-                  <p className="text-gray-600 mb-4">{dest.tagline}</p>
+                {/* Card Content */}
+                <div className="relative z-10 p-8">
+                  {/* Flag */}
+                  <div className="mb-6 overflow-hidden">
+                    <span className="text-7xl block group-hover:scale-110 group-hover:translate-y-2 transition-transform duration-500">
+                      {dest.flag}
+                    </span>
+                  </div>
 
-                  <div className="space-y-2 mb-4">
+                  {/* Title & Tagline */}
+                  <h3 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">{dest.name}</h3>
+                  <p className="text-slate-600 text-lg font-light mb-6">{dest.tagline}</p>
+
+                  {/* Highlights */}
+                  <div className="space-y-3 mb-8">
                     {dest.highlights.map((highlight) => (
-                      <div key={highlight} className="flex items-center gap-2 text-sm text-gray-700">
-                        <span className="text-green-600">✓</span>
-                        <span>{highlight}</span>
+                      <div key={highlight} className="flex items-center gap-3 text-sm text-slate-700">
+                        <span className="text-slate-400 font-light">→</span>
+                        <span className="font-medium">{highlight}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <span className="text-sm text-gray-500">Cost of Living</span>
-                    <span className="font-bold text-blue-600">{dest.costIndex}% of London</span>
+                  {/* Cost Index */}
+                  <div className="pt-6 border-t border-slate-200 flex items-center justify-between">
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Cost Index</span>
+                    <span className="font-bold text-lg text-slate-900">{dest.costIndex}% vs London</span>
                   </div>
+                </div>
+
+                {/* Hover Arrow Indicator */}
+                <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="text-2xl text-slate-900 font-light group-hover:translate-x-1 inline-block transition-transform">→</span>
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <Link
               href="/destinations"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg"
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl duration-300"
             >
               View All Destinations
-              <span>→</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black mb-4">Your Relocation Journey</h2>
-            <p className="text-xl text-gray-600">Simple steps to start your international move</p>
+      <section className="py-28 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-20">
+            <span className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Four Simple Steps</span>
+            <h2 className="text-5xl lg:text-6xl font-black text-slate-900 mt-3 leading-tight max-w-2xl">Your Relocation Journey</h2>
+            <p className="text-lg text-slate-600 max-w-3xl mt-6 font-light">
+              A straightforward process designed to guide you through every step of your international move.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">🔍</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3">1. Explore Destinations</h3>
-              <p className="text-gray-600">
-                Browse 50+ countries with detailed visa requirements, costs, and lifestyle info
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: '01', icon: '🔍', title: 'Explore Destinations', desc: 'Browse 50+ countries with detailed visa requirements, costs, and lifestyle information' },
+              { step: '02', icon: '📊', title: 'Calculate Costs', desc: 'Use our calculator to estimate your relocation budget and monthly expenses' },
+              { step: '03', icon: '💼', title: 'Find Jobs', desc: 'Browse jobs offering visa sponsorship in your target destination' },
+              { step: '04', icon: '✈️', title: 'Get Support', desc: 'Connect with visa consultants, movers, and relocation services' },
+            ].map((item, idx) => (
+              <div key={idx} className="group relative">
+                {/* Step Number */}
+                <div className="mb-8">
+                  <span className="text-6xl font-black text-slate-900 opacity-10 group-hover:opacity-20 transition-opacity duration-300">{item.step}</span>
+                  <div className="relative -mt-8 mb-6 inline-block">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center text-3xl border-2 border-slate-200 group-hover:border-slate-900 group-hover:scale-110 transition-all duration-300 shadow-sm">
+                      {item.icon}
+                    </div>
+                  </div>
+                </div>
 
-            <div className="text-center">
-              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">📊</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3">2. Calculate Costs</h3>
-              <p className="text-gray-600">
-                Use our calculator to estimate your relocation budget and monthly expenses
-              </p>
-            </div>
+                {/* Content */}
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                <p className="text-slate-600 font-light leading-relaxed text-sm">
+                  {item.desc}
+                </p>
 
-            <div className="text-center">
-              <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">💼</span>
+                {/* Connection Line (hidden on mobile) */}
+                {idx < 3 && (
+                  <div className="hidden lg:block absolute top-8 -right-4 w-8 h-0.5 bg-gradient-to-r from-slate-300 to-transparent" />
+                )}
               </div>
-              <h3 className="text-xl font-bold mb-3">3. Find Jobs</h3>
-              <p className="text-gray-600">
-                Browse jobs offering visa sponsorship in your target destination
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-4xl">✈️</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3">4. Get Support</h3>
-              <p className="text-gray-600">
-                Connect with visa consultants, movers, and relocation services
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Popular Guides */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black mb-4">Expert Relocation Guides</h2>
-            <p className="text-xl text-gray-600">
-              Comprehensive guides covering visas, taxes, and relocation logistics
+      <section className="py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-16">
+            <span className="text-sm font-semibold text-slate-500 uppercase tracking-widest">Expert Resources</span>
+            <h2 className="text-5xl lg:text-6xl font-black text-slate-900 mt-3 leading-tight max-w-2xl">Relocation Guides & Insights</h2>
+            <p className="text-lg text-slate-600 max-w-3xl mt-6 font-light">
+              Comprehensive guides covering visas, taxes, cost of living, and relocation logistics from industry experts.
             </p>
           </div>
 
@@ -305,25 +331,41 @@ export default function Home() {
               <Link
                 key={guide.slug}
                 href={`/guides/${guide.slug}`}
-                className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-all hover:scale-105"
+                className="group relative bg-gradient-to-br from-slate-50 to-white rounded-2xl p-8 border border-slate-200 hover:border-slate-300 hover:shadow-lg transition-all duration-500 hover:-translate-y-1"
               >
-                <div className="inline-block px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-semibold mb-4">
+                {/* Category Badge */}
+                <div className="inline-flex px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-bold uppercase tracking-wider mb-6 group-hover:bg-slate-900 group-hover:text-white transition-colors duration-300">
                   {guide.category}
                 </div>
-                <h3 className="text-2xl font-bold mb-3">{guide.title}</h3>
-                <p className="text-gray-600 mb-4">{guide.description}</p>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <span>📈</span>
-                  <span>{guide.searches} searches</span>
+
+                {/* Title */}
+                <h3 className="text-2xl font-bold text-slate-900 mb-4 leading-tight group-hover:text-slate-700 transition-colors">
+                  {guide.title}
+                </h3>
+
+                {/* Description */}
+                <p className="text-slate-600 text-sm font-light mb-6 leading-relaxed">
+                  {guide.description}
+                </p>
+
+                {/* Searches */}
+                <div className="flex items-center gap-2 text-sm text-slate-500 font-light">
+                  <span className="text-base">📈</span>
+                  <span>{guide.searches} monthly searches</span>
+                </div>
+
+                {/* Read Arrow */}
+                <div className="absolute top-6 right-6 text-2xl text-slate-900 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  →
                 </div>
               </Link>
             ))}
           </div>
 
-          <div className="text-center mt-12">
+          <div className="text-center mt-16">
             <Link
               href="/guides"
-              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all shadow-md border-2 border-blue-600"
+              className="inline-flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl duration-300"
             >
               View All Guides
               <span>→</span>
@@ -333,24 +375,34 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-green-600 text-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-black mb-6">
-            Ready to Start Your Journey?
+      <section className="relative py-32 overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+
+        {/* Decorative Elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-600/10 rounded-full blur-3xl" />
+
+        {/* Content */}
+        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+            Ready to Start Your <span className="bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">International Journey?</span>
           </h2>
-          <p className="text-xl text-blue-100 mb-10 leading-relaxed">
-            Join thousands of successful relocators who used Relocation Quest to plan their international move.
+          <p className="text-xl text-slate-300 mb-12 leading-relaxed font-light max-w-2xl mx-auto">
+            Join thousands of successful relocators who used Relocation Quest to plan their move abroad. From visa planning to job hunting, we've got you covered.
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/handler/sign-up"
-              className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all shadow-lg"
+              className="group inline-flex items-center justify-center gap-2 bg-white text-slate-900 px-10 py-5 rounded-xl font-bold text-lg hover:bg-amber-100 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 duration-300"
             >
               Get Started Free
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
             <Link
               href="/calculator"
-              className="bg-blue-700/50 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-700/70 transition-all border border-white/20"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all border border-white/30 duration-300"
             >
               Try Cost Calculator
             </Link>
