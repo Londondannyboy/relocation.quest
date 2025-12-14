@@ -7,7 +7,7 @@ import Link from 'next/link'
 import RepoBuilder from '@/components/RepoBuilder'
 import { KnowledgeGraph } from '@/components/KnowledgeGraph'
 
-const CONFIG_ID = 'd57ceb71-4cf5-47e9-87cd-6052445a031c'
+const CONFIG_ID = 'd0e862f0-20f7-487e-8ea4-f9cb11c0e6ca'
 
 // Store chat_group_id per user for Hume resume functionality
 function getChatGroupId(userId: string): string | null {

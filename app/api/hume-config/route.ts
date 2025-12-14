@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const HUME_CONFIG_ID = process.env.NEXT_PUBLIC_HUME_CONFIG_ID || 'd57ceb71-4cf5-47e9-87cd-6052445a031c'
+const HUME_CONFIG_ID = process.env.NEXT_PUBLIC_HUME_CONFIG_ID || 'd0e862f0-20f7-487e-8ea4-f9cb11c0e6ca'
 
 async function getHumeAccessToken(): Promise<string | null> {
   const apiKey = process.env.NEXT_PUBLIC_HUME_API_KEY || process.env.HUME_API_KEY

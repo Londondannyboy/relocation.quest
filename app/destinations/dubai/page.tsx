@@ -1,48 +1,102 @@
-'use client';
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { getDestinationBySlug } from '@/lib/destinations/data'
+import { DestinationHero } from '@/components/destinations/DestinationHero'
+import { QuickFacts } from '@/components/destinations/QuickFacts'
+import { VisaOptions } from '@/components/destinations/VisaOptions'
+import { CostOfLiving } from '@/components/destinations/CostOfLiving'
+import { FAQSection } from '@/components/destinations/FAQSection'
+
+const destination = getDestinationBySlug('dubai')!
+
+export const metadata: Metadata = {
+  title: destination.metaTitle || `Moving to ${destination.countryName} | Relocation Quest`,
+  description: destination.metaDescription || destination.heroSubtitle,
+  alternates: {
+    canonical: `https://relocation.quest/destinations/${destination.slug}`,
+  },
+}
 
 export default function DubaiPage() {
   return (
     <main className="min-h-screen bg-white">
-      <section className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white py-16">
-        <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-5xl font-bold mb-4">Moving to Dubai</h1>
-          <p className="text-xl text-yellow-100">Complete guide to relocating to Dubai including visa types, jobs, lifestyle, and expat resources.</p>
-        </div>
-      </section>
+      <DestinationHero
+        title={destination.heroTitle}
+        subtitle={destination.heroSubtitle}
+        gradient={destination.heroGradient}
+        flag={destination.flag}
+        countryName={destination.countryName}
+      />
 
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <h2 className="text-3xl font-bold mb-6">Why Move to Dubai?</h2>
-        <ul className="text-lg text-gray-700 space-y-3 mb-12">
-          <li>✓ Tax-free salaries and income</li>
-          <li>✓ Booming economy and business opportunities</li>
-          <li>✓ Luxurious lifestyle</li>
-          <li>✓ Diverse international community</li>
-          <li>✓ Modern infrastructure</li>
-          <li>✓ No income tax for residents</li>
-        </ul>
+      <div className="max-w-6xl mx-auto px-6 py-12">
+        <QuickFacts facts={destination.quickFacts} />
 
-        <h2 className="text-3xl font-bold mb-6">Visa Options</h2>
-        <div className="space-y-4 mb-12">
-          <div className="border-l-4 border-yellow-600 pl-6">
-            <h3 className="font-bold text-lg">Employment Visa</h3>
-            <p className="text-gray-700">Sponsored by employer - most common option</p>
+        <section className="py-12">
+          <h2 className="text-3xl font-bold mb-6">Why Move to Dubai?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {destination.highlights.map((highlight, index) => (
+              <div key={index} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                <span className="text-orange-600 text-xl mt-0.5">{highlight.icon || '✓'}</span>
+                <span className="text-gray-700">{highlight.text}</span>
+              </div>
+            ))}
           </div>
-          <div className="border-l-4 border-yellow-600 pl-6">
-            <h3 className="font-bold text-lg">Freelance Visa</h3>
-            <p className="text-gray-700">For self-employed professionals</p>
-          </div>
-          <div className="border-l-4 border-yellow-600 pl-6">
-            <h3 className="font-bold text-lg">Golden Visa</h3>
-            <p className="text-gray-700">Long-term residency for investors and professionals</p>
-          </div>
-        </div>
+        </section>
 
-        <div className="space-y-4">
-          <button className="w-full bg-yellow-600 text-white py-3 rounded-lg font-bold hover:bg-yellow-700">View Full Guide</button>
-          <button className="w-full bg-yellow-600 text-white py-3 rounded-lg font-bold hover:bg-yellow-700">Browse Dubai Jobs</button>
-          <button className="w-full bg-yellow-600 text-white py-3 rounded-lg font-bold hover:bg-yellow-700">Find Services</button>
-        </div>
+        <VisaOptions visas={destination.visas} />
+        <CostOfLiving costs={destination.costOfLiving} countryName={destination.countryName} />
+
+        {destination.jobMarket && (
+          <section className="py-12">
+            <h2 className="text-3xl font-bold mb-8">Job Market</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-bold mb-4">Top Industries</h3>
+                <ul className="space-y-2">
+                  {destination.jobMarket.topIndustries.map((industry, index) => (
+                    <li key={index} className="flex items-center gap-2 text-gray-700">
+                      <span className="text-blue-600">•</span>
+                      <span>{industry}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="bg-gray-50 rounded-xl p-6">
+                <h3 className="text-xl font-bold mb-4">Key Stats</h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-600">Avg Tech Salary</p>
+                    <p className="text-2xl font-bold">AED {destination.jobMarket.avgSalaryTech?.toLocaleString()}/year</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Tax Rate</p>
+                    <p className="text-2xl font-bold text-green-600">0%</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        <FAQSection faqs={destination.faqs} />
+
+        <section className="py-12">
+          <div className="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-2xl p-8 text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Move to Dubai?</h2>
+            <p className="text-xl text-yellow-100 mb-8">
+              Explore tax-free jobs and start your Dubai journey.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/jobs?country=dubai" className="bg-white text-orange-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-orange-50 transition-all shadow-lg">
+                Browse Dubai Jobs
+              </Link>
+              <Link href="/services?country=dubai" className="bg-orange-700/50 backdrop-blur-sm text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-orange-700/70 transition-all border border-white/20">
+                Find Relocation Services
+              </Link>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
-  );
+  )
 }
