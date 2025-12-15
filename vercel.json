@@ -17,11 +17,6 @@
       "permanent": true
     },
     {
-      "source": "/cyprus-requirements-visa",
-      "destination": "/destinations/cyprus",
-      "permanent": true
-    },
-    {
       "source": "/fractional-:path*",
       "destination": "/destinations",
       "permanent": true
