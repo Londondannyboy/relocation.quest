@@ -9,6 +9,7 @@ import { DynamicView, GeneratedView, ViewBlock } from '@/components/DynamicView'
 import { HumeWidget } from '@/components/HumeWidget';
 import { ComparisonPicker } from '@/components/ComparisonPicker';
 import { CountryForceGraph } from '@/components/CountryForceGraph';
+import { WorldMapWrapper } from '@/components/WorldMapWrapper';
 
 // Types matching database schema (comprehensive)
 interface Destination {
@@ -569,6 +570,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [comparingLoading, setComparingLoading] = useState(false);
   const [showGraph, setShowGraph] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const { appendMessage } = useCopilotChat();
 
   // Fetch available destinations on mount
@@ -1070,7 +1072,7 @@ Be conversational and helpful. After showing a dashboard, point out specific int
                       isLoading={comparingLoading}
                     />
                     <button
-                      onClick={() => setShowGraph(!showGraph)}
+                      onClick={() => { setShowGraph(!showGraph); if (!showGraph) setShowMap(false); }}
                       className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all border ${
                         showGraph
                           ? 'bg-cyan-500/30 text-cyan-300 border-cyan-500/50'
@@ -1080,7 +1082,20 @@ Be conversational and helpful. After showing a dashboard, point out specific int
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                       </svg>
-                      {showGraph ? 'Hide Graph' : 'Explore Connections'}
+                      {showGraph ? 'Hide Graph' : 'Connections'}
+                    </button>
+                    <button
+                      onClick={() => { setShowMap(!showMap); if (!showMap) setShowGraph(false); }}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all border ${
+                        showMap
+                          ? 'bg-emerald-500/30 text-emerald-300 border-emerald-500/50'
+                          : 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border-emerald-500/30'
+                      }`}
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {showMap ? 'Hide Map' : 'World Map'}
                     </button>
                   </div>
                 )}
@@ -1129,6 +1144,29 @@ Be conversational and helpful. After showing a dashboard, point out specific int
                     }))}
                     onSelectCountry={handleGraphCountrySelect}
                     highlightedCountry={state.currentCountry?.toLowerCase().replace(/\s+/g, '-')}
+                  />
+                </motion.div>
+              )}
+
+              {/* World Map Visualization */}
+              {showMap && state.availableDestinations.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-8"
+                >
+                  <WorldMapWrapper
+                    countries={state.availableDestinations.map(d => ({
+                      slug: d.slug,
+                      country_name: d.country_name,
+                      flag: d.flag,
+                      region: d.region,
+                      quality_of_life: d.quality_of_life,
+                      digital_nomad_info: d.digital_nomad_info,
+                    }))}
+                    onSelectCountry={handleGraphCountrySelect}
+                    selectedCountry={state.currentCountry?.toLowerCase().replace(/\s+/g, '-')}
                   />
                 </motion.div>
               )}
