@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { CopilotSidebar } from '@copilotkit/react-ui';
 import { useCopilotReadable } from '@copilotkit/react-core';
 import { motion, AnimatePresence } from 'framer-motion';
-import { PageContextProvider, CompactVoiceButton } from '@/components/voice';
+import { PageContextProvider, VoiceChatProvider, SyncedVoiceButton } from '@/components/voice';
 import { CostChart } from '@/components/mdx/CostChart';
 import { QualityOfLifeRadar } from '@/components/mdx/QualityOfLifeRadar';
 
@@ -357,9 +357,10 @@ export default function DestinationClient({ slug, destination }: DestinationClie
 
   return (
     <PageContextProvider pageSlug={`/destinations/${slug}`}>
-      <div className="min-h-screen bg-slate-50">
-        {/* Navigation */}
-        <NavBar countryName={destination.country_name} />
+      <VoiceChatProvider>
+        <div className="min-h-screen bg-slate-50">
+          {/* Navigation */}
+          <NavBar countryName={destination.country_name} />
 
         {/* Hero Section */}
         <div
@@ -400,7 +401,7 @@ export default function DestinationClient({ slug, destination }: DestinationClie
 
           {/* Voice Widget - Bottom Left */}
           <div className="absolute bottom-8 left-8">
-            <CompactVoiceButton />
+            <SyncedVoiceButton />
           </div>
 
           {/* Scroll indicator */}
@@ -716,6 +717,7 @@ export default function DestinationClient({ slug, destination }: DestinationClie
           </div>
         </div>
       </div>
+      </VoiceChatProvider>
     </PageContextProvider>
   );
 }
