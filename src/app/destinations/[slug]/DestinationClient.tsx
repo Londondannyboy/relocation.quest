@@ -11,6 +11,7 @@ import { QualityOfLifeRadar } from '@/components/mdx/QualityOfLifeRadar';
 import { ComparisonTable } from '@/components/mdx/ComparisonTable';
 import { ProsCons } from '@/components/mdx/ProsCons';
 import { useZepMemory } from '@/hooks/useZepMemory';
+import { useAuthenticate } from '@/lib/auth/client';
 
 // Types
 interface QuickFact {
@@ -353,11 +354,24 @@ export default function DestinationClient({ slug, destination }: DestinationClie
     });
   }, [destination.country_name, destination.hero_image_url, destination.cost_of_living, slug, fallbackData]);
 
-  // Zep memory for user context (use null for demo, would normally come from auth)
-  const demoUserId = typeof window !== 'undefined'
-    ? localStorage.getItem('demo_user_id') || null
-    : null;
-  const { user: zepUser, facts: userFacts, buildContext, isReturningUser } = useZepMemory(demoUserId);
+  // Get logged-in user from Neon Auth
+  const { data: authData, user: authUser, isPending: authPending } = useAuthenticate();
+  const authUserId = authUser?.id || null;
+  const authUserName = (authUser as any)?.name || (authUser as any)?.email?.split('@')[0] || null;
+
+  // Debug auth state
+  useEffect(() => {
+    console.log('[Auth Debug] ================================');
+    console.log('[Auth Debug] authPending:', authPending);
+    console.log('[Auth Debug] authData:', authData);
+    console.log('[Auth Debug] authUser:', authUser);
+    console.log('[Auth Debug] authUserId:', authUserId);
+    console.log('[Auth Debug] authUserName:', authUserName);
+    console.log('[Auth Debug] ================================');
+  }, [authPending, authData, authUser, authUserId, authUserName]);
+
+  // Zep memory for user context (now using real auth)
+  const { user: zepUser, facts: userFacts, buildContext, isReturningUser } = useZepMemory(authUserId);
 
   // Make destination data readable to CopilotKit
   useCopilotReadable({
@@ -520,7 +534,16 @@ export default function DestinationClient({ slug, destination }: DestinationClie
 
   // Build personalized instructions for CopilotKit
   const userContext = buildContext();
-  const userName = zepUser?.firstName || (isReturningUser ? 'valued user' : null);
+  // Use auth name first, then Zep name, then fallback
+  const userName = authUserName || zepUser?.firstName || (isReturningUser ? 'valued user' : null);
+
+  // Debug user context
+  useEffect(() => {
+    console.log('[User Debug] authUserName:', authUserName);
+    console.log('[User Debug] zepUser:', zepUser);
+    console.log('[User Debug] userName (final):', userName);
+    console.log('[User Debug] isReturningUser:', isReturningUser);
+  }, [authUserName, zepUser, userName, isReturningUser]);
   const personalizedInstructions = `You are ATLAS, an expert relocation advisor for ${destination.country_name}.
 
 ${userName ? `## USER CONTEXT
@@ -589,7 +612,7 @@ Language: ${destination.language}
     <PageContextProvider pageSlug={`/destinations/${slug}`}>
       <VoiceChatProvider
         userName={userName || undefined}
-        userId={demoUserId || undefined}
+        userId={authUserId || undefined}
         persona={undefined}
         pageContext={`Viewing ${destination.country_name} destination page`}
         isReturningUser={isReturningUser}
@@ -952,6 +975,7 @@ Language: ${destination.language}
                 </div>
                 <div className="flex-1 overflow-hidden">
                   <CopilotSidebar
+                    defaultOpen={true}
                     labels={{
                       title: `ATLAS - ${destination.country_name} Expert`,
                       initial: userName
