@@ -202,10 +202,14 @@ NEON_AUTH_BASE_URL=https://ep-xxx.neonauth.us-east-1.aws.neon.tech/neondb/auth
 |--------|-------|
 | `node scripts/create-mdx-tables.js` | Create database tables |
 | `node scripts/populate-destination.js cyprus` | Populate country from data file |
+| `node scripts/populate-article.js [slug]` | Populate article from data file |
+| `node scripts/audit-articles-seo.js` | Run SEO audit on all articles |
+| `node scripts/fix-articles-seo.js` | Bulk fix SEO issues (links, keywords) |
 
 ### Data Files
 
-Country content in `scripts/data/<country>.js`. Cyprus is the template.
+- Country content in `scripts/data/<country>.js`. Cyprus is the template.
+- Article content in `scripts/data/articles/<slug>.js`. 53 articles total.
 
 ---
 
@@ -537,3 +541,62 @@ useHumanInTheLoop({
 - Implemented 5 useHumanInTheLoop hooks in DashboardClient
 - Added onboarding-aware CopilotSidebar instructions
 - Dashboard now updates live as confirmations happen
+
+---
+
+## Phase 11: Content & SEO (COMPLETE)
+
+**Goal**: Create comprehensive SEO-optimized content with proper linking structure.
+
+### Completed Tasks
+
+- [x] Created 53 rich articles (visa guides + relocation guides)
+- [x] Dynamic `sitemap.ts` for all content types
+- [x] `robots.ts` with crawl directives
+- [x] External authority links on all articles (government + tourism sites)
+- [x] Internal linking via article clusters
+- [x] Keyword optimization (bolded, 4+ mentions)
+- [x] Hero images from Unsplash on all content
+- [x] SEO audit script for monitoring
+- [x] Bulk fix script for SEO issues
+
+### SEO Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `audit-articles-seo.js` | Check keywords, links, images across all articles |
+| `fix-articles-seo.js` | Bulk add external links, bold keywords, update internal links |
+
+### Article Clusters (Internal Linking)
+
+| Cluster | Articles |
+|---------|----------|
+| Europe Nomad | Portugal, Spain, Italy, Croatia, Greece |
+| Balkans | Albania, Montenegro, Croatia, Georgia, Hungary |
+| Nordic | Sweden, Norway, Finland, Denmark, Iceland |
+| Western Europe | Netherlands, Germany, Belgium, France, Ireland, UK, Switzerland |
+| Central Europe | Austria, Germany, Switzerland, Hungary, Poland |
+| Southeast Asia | Thailand, Vietnam, Indonesia/Bali, Malaysia |
+| East Asia | Japan, South Korea, Taiwan, Singapore |
+| Caribbean | Barbados, Bermuda, Saint Kitts |
+| Latin America | Mexico, Costa Rica, Colombia, Brazil, Argentina, Chile |
+| Oceania | Australia, New Zealand |
+
+### SEO Audit Results (Jan 18, 2026)
+
+| Check | Status |
+|-------|--------|
+| External authority links | 100% ✓ |
+| Keyword bolded in copy | 100% ✓ |
+| Internal links (≥2) | 100% ✓ |
+| Hero images | 100% ✓ |
+
+### Session Log (Jan 18, 2026)
+
+- Created 17 new articles (Vietnam, Malaysia, Taiwan, Costa Rica, Montenegro, Albania, Bermuda, Barbados, Mauritius, Seychelles, Iceland, Sweden, Netherlands, Germany, Belgium, Ireland, South Africa)
+- Built dynamic sitemap.ts and robots.ts
+- Created SEO audit and fix scripts
+- Added Official Resources section with government + tourism links to all 53 articles
+- Fixed keyword bolding issues
+- Updated article clusters for internal linking
+- Populated all 53 articles to Neon database
