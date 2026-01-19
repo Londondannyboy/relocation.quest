@@ -50,9 +50,20 @@ Single-page conversational AI relocation advisor. CopilotKit Next.js runtime wit
 
 | Action | Purpose |
 |--------|---------|
-| `show_destination` | Display single destination card from Neon |
+| `update_destination_view` | Display destination dashboard (renamed from show_destination_card) |
 | `save_preferences` | Save user budget/climate/purpose |
 | `generate_custom_view` | AI-composed MDX layouts (comparison, cost breakdown, pros/cons) |
+
+## HITL Tools (useHumanInTheLoop) - Dashboard
+
+| Tool | Purpose |
+|------|---------|
+| `confirm_persona` | Confirm user relocation type |
+| `confirm_current_location` | Confirm where user is based |
+| `confirm_destination` | Confirm target destination |
+| `confirm_relocation_reason` | Confirm why they want to relocate |
+| `confirm_timeline` | Confirm relocation timeline |
+| `confirm_budget` | Confirm monthly budget |
 
 ---
 
@@ -600,3 +611,57 @@ useHumanInTheLoop({
 - Fixed keyword bolding issues
 - Updated article clusters for internal linking
 - Populated all 53 articles to Neon database
+
+### Session Log (Jan 19, 2026) - Dashboard UX Overhaul
+
+**Major Fixes Completed:**
+
+1. **Frontend Action Naming Conflict FIXED**
+   - Renamed `show_destination_card` to `update_destination_view` in page.tsx
+   - Updated agent.py instructions to call the new frontend action
+   - Root cause: Agent's backend tool shadowed frontend action of same name
+
+2. **Voice Widget Cleanup**
+   - Replaced HumeWidget with minimal SyncedVoiceButton on dashboard
+   - Positioned at center-top below header (no black background)
+   - Wrapped Dashboard with VoiceChatProvider for voice context
+
+3. **CopilotKit Sidebar**
+   - Set `defaultOpen={false}` - collapsed by default
+   - Less intrusive, user clicks to expand
+
+4. **Greeting Logic for Returning Users**
+   - Added `hasHistory` flag to zep-context API response
+   - Detect returning users from Zep conversation history
+   - Returning users get "Welcome back!" (no name repetition)
+   - First-time users get "Hi [FirstName]!" greeting
+
+5. **Stage 1 Onboarding Completion Check**
+   - 6 required fields: persona, location, destination, reason, timeline, budget
+   - Added Stage 1 progress indicator with animated progress bar
+   - Agent blocks destination advice until Stage 1 complete
+   - Added `confirm_relocation_reason` HITL tool
+   - CopilotSidebar instructions show missing fields with ✓/❌
+
+6. **Editable Dashboard Profile Cards**
+   - Created `EditableField` component with inline edit UI
+   - Hover to reveal Edit button, inline editing experience
+   - Auto-saves to API and updates local state
+   - Made Preferences section editable (country, timeline, budget)
+
+7. **Country Pills Fixed**
+   - Pills now directly fetch and display destination via API
+   - More reliable than chat-based approach
+   - Background and content update immediately on click
+
+8. **First Name Extraction**
+   - Added `getFirstName()` helper to extract first name from display name
+   - "Dan Keegan" → "Dan"
+   - Applied to all greeting points in dashboard
+
+**Files Modified:**
+- `src/app/page.tsx` - Frontend action rename, direct pill loading
+- `src/app/dashboard/DashboardClient.tsx` - Voice widget, Stage 1, editable cards, first name
+- `src/components/voice/VoiceChatSync.tsx` - Returning user detection from Zep
+- `src/app/api/zep-context/route.ts` - hasHistory flag
+- `agent/src/agent.py` - update_destination_view instructions, greeting logic
