@@ -30,6 +30,7 @@ interface UserProfile {
   priority_tax_benefits?: number;
   priority_cost_of_living?: number;
   priority_climate?: number;
+  primary_reason?: string;  // Why they want to relocate
 }
 
 // Persona options
@@ -749,6 +750,74 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
     },
   });
 
+  // HITL: Confirm Relocation Reason
+  useHumanInTheLoop({
+    name: 'confirm_relocation_reason',
+    description: 'Confirm why user wants to relocate',
+    parameters: [
+      { name: 'reason', type: 'string', description: 'Main reason for relocation', required: true },
+      { name: 'user_id', type: 'string', description: 'User ID', required: true },
+    ],
+    render: ({ args, respond, status }) => {
+      if (status === 'executing' && respond) {
+        return (
+          <div className="p-5 bg-white rounded-xl shadow-xl border border-cyan-100 max-w-md">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">Confirm Your Reason</h3>
+            <p className="text-slate-600 mb-4">
+              Your main motivation for relocating:
+            </p>
+            <div className="bg-cyan-50 p-4 rounded-lg mb-4 text-slate-700 italic">
+              &ldquo;{args.reason}&rdquo;
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={async () => {
+                  await fetch('/api/user-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ primary_reason: args.reason }),
+                  });
+                  setProfile(prev => ({ ...prev, primary_reason: args.reason }));
+                  respond({ confirmed: true, reason: args.reason });
+                }}
+                className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+              >
+                Yes, that captures it
+              </button>
+              <button
+                onClick={() => respond({ confirmed: false, edit_requested: true })}
+                className="flex-1 border border-slate-300 hover:border-slate-400 text-slate-700 py-2 px-4 rounded-lg font-medium transition-colors"
+              >
+                Let me explain more
+              </button>
+            </div>
+          </div>
+        );
+      }
+      if (status === 'complete') {
+        return (
+          <div className="p-3 bg-emerald-50 rounded-lg text-emerald-700 text-sm">
+            Reason confirmed
+          </div>
+        );
+      }
+      return <></>;
+    },
+  });
+
+  // Calculate Stage 1 completion
+  const stage1Fields = {
+    persona: !!profile.persona,
+    current_location: !!profile.current_country,
+    primary_destination: !!(profile.target_destinations && profile.target_destinations.length > 0),
+    relocation_reason: !!profile.primary_reason,
+    timeline: !!profile.timeline,
+    budget: !!profile.budget_monthly,
+  };
+  const stage1Complete = Object.values(stage1Fields).filter(Boolean).length;
+  const stage1Total = Object.keys(stage1Fields).length;
+  const isStage1Done = stage1Complete === stage1Total;
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -785,6 +854,35 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
             </h1>
             <p className="text-slate-600 mt-1">Here&apos;s your personalized relocation dashboard</p>
           </div>
+
+          {/* Stage 1 Progress */}
+          {!isStage1Done && (
+            <div className="mb-8 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <h3 className="font-semibold text-slate-900">Complete Your Profile</h3>
+                  <p className="text-sm text-slate-600">Help ATLAS give you personalized recommendations</p>
+                </div>
+                <span className="text-amber-600 font-bold text-lg">{stage1Complete}/{stage1Total}</span>
+              </div>
+              <div className="h-2 bg-amber-100 rounded-full overflow-hidden mb-4">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-amber-400 to-orange-500"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(stage1Complete / stage1Total) * 100}%` }}
+                  transition={{ duration: 0.5 }}
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                {Object.entries(stage1Fields).map(([key, done]) => (
+                  <div key={key} className={`flex items-center gap-1 ${done ? 'text-emerald-600' : 'text-slate-400'}`}>
+                    <span>{done ? '✓' : '○'}</span>
+                    <span className="capitalize">{key.replace('_', ' ')}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Persona Card */}
           {persona && (
@@ -1017,30 +1115,50 @@ CRITICAL USER CONTEXT:
 - Current Persona: ${profile.persona || 'Not set'}
 - Current Country: ${profile.current_country || 'Not set'}
 - Target Destinations: ${profile.target_destinations?.join(', ') || 'None'}
+- Relocation Reason: ${profile.primary_reason || 'Not set'}
 - Timeline: ${profile.timeline || 'Not set'}
 - Budget: ${profile.budget_monthly ? '€' + profile.budget_monthly.toLocaleString() : 'Not set'}
-- Onboarding Complete: ${profile.onboarding_completed ? 'Yes' : 'No'}
 
-${!profile.onboarding_completed ? `
-ONBOARDING MODE - Use HITL tools to confirm user information:
-- When user mentions their situation → confirm_persona(persona, description, user_id)
-- When user mentions location → confirm_current_location(country, city, user_id)
-- When user mentions destination → confirm_destination(destination, is_primary, user_id)
-- When user mentions timeline → confirm_timeline(timeline, display, user_id)
-- When user mentions budget → confirm_budget(monthly_budget, currency, user_id)
+STAGE 1 PROFILE STATUS (${stage1Complete}/${stage1Total} complete):
+${!stage1Fields.persona ? '❌ Missing: Persona (company, digital nomad, family, etc.)' : '✓ Persona: ' + profile.persona}
+${!stage1Fields.current_location ? '❌ Missing: Current location' : '✓ Location: ' + profile.current_country}
+${!stage1Fields.primary_destination ? '❌ Missing: Target destination' : '✓ Destinations: ' + profile.target_destinations?.join(', ')}
+${!stage1Fields.relocation_reason ? '❌ Missing: Why they want to relocate' : '✓ Reason set'}
+${!stage1Fields.timeline ? '❌ Missing: Timeline' : '✓ Timeline: ' + profile.timeline}
+${!stage1Fields.budget ? '❌ Missing: Budget' : '✓ Budget: €' + profile.budget_monthly?.toLocaleString()}
 
-Guide them conversationally through onboarding. Each confirmation will update their dashboard live.
+${!isStage1Done ? `
+⚠️ STAGE 1 INCOMPLETE - You MUST complete profile before giving destination advice!
+
+ONBOARDING MODE - Use HITL tools to collect missing information:
+- User mentions their situation → confirm_persona(persona, description, user_id)
+- User mentions location → confirm_current_location(country, city, user_id)
+- User mentions destination → confirm_destination(destination, is_primary, user_id)
+- User mentions why they want to relocate → confirm_relocation_reason(reason, user_id)
+- User mentions timeline → confirm_timeline(timeline, display, user_id)
+- User mentions budget → confirm_budget(monthly_budget, currency, user_id)
+
+RULES:
+1. Focus on collecting MISSING fields first
+2. Ask ONE question at a time
+3. Confirm each piece of information with HITL tool
+4. Do NOT give specific destination advice until Stage 1 is complete
+5. If user asks about destinations, say "I'd love to help! But first, let me understand your situation better..."
+
+Guide them conversationally. Each confirmation updates their dashboard live.
 ` : `
-Profile complete! Help the user with:
-- Destination comparisons
+✅ STAGE 1 COMPLETE! Full profile access - help the user with:
+- Destination comparisons and deep-dives
 - Visa options and requirements
 - Cost of living analysis
-- Tax optimization strategies
+- Tax optimization strategies (especially for persona: ${profile.persona})
 - Quality of life factors
+- Timeline planning
+
+Use update_destination_view to show destination dashboards when discussing countries.
 `}
 
-Always use the user_id from the context above when calling HITL tools.
-Never ask for user ID - you already have it.`}
+Always use user_id: "${user.id}" when calling HITL tools.`}
                   className="h-full"
                 />
               </div>
