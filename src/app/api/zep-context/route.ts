@@ -132,10 +132,14 @@ export async function GET(request: NextRequest) {
       ? contextParts.join('\n')
       : '';
 
+    // Determine if this is a returning user based on whether they have any facts in Zep
+    const hasHistory = categorizedFacts.length > 0;
+
     return NextResponse.json({
       context,
       facts: categorizedFacts,
       entities,
+      hasHistory,  // True if user has prior conversation history
     });
   } catch (error) {
     console.error('[Zep] Error:', error);

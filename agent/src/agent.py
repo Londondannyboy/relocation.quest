@@ -1614,16 +1614,16 @@ async def clm_endpoint(request: Request):
             user_interests = user_context.get("interests", []) if user_context else []
 
             if is_returning and user_name and user_interests:
-                # Returning user with known interests - suggest their topic!
+                # Returning user with known interests - suggest their topic (NO name repetition)
                 suggested_topic = user_interests[0]  # Most recent interest
-                response_text = f"Welcome back, {user_name}! I remember you were interested in {suggested_topic}. Shall we explore that further, or would you like to discover something new?"
+                response_text = f"Welcome back! I remember you were interested in {suggested_topic}. Shall we explore that further, or would you like to discover something new?"
                 # STORE the suggestion so "yes" works
                 set_last_suggestion(session_id or "default", suggested_topic)
                 mark_name_used(session_id or "default", in_greeting=True)
                 print(f"[ATLAS CLM] Suggesting topic from Zep: {suggested_topic}", file=sys.stderr)
             elif is_returning and user_name:
-                # Returning user with name (no interests yet)
-                response_text = f"Welcome back to Relocation Quest, {user_name}! Lovely to hear from you again. Which destination shall we explore today?"
+                # Returning user with name (no interests yet) - NO name repetition
+                response_text = f"Welcome back! Great to see you again. Which destination shall we explore today?"
                 mark_name_used(session_id or "default", in_greeting=True)
             elif user_name:
                 # New user with name - suggest Portugal

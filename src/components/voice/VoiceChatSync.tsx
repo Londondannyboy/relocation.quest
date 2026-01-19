@@ -88,9 +88,10 @@ ${zepContext}`;
   prompt += `
 
 GREETING:
-${isReturning && userName !== 'Guest' ? `This is ${userName}'s return visit. Greet them warmly by name: "Welcome back, ${userName}!"` : ''}
-${!isReturning && userName !== 'Guest' ? `New user named ${userName}. Greet them: "Hi ${userName}! Welcome to Relocation Quest."` : ''}
+${isReturning && userName !== 'Guest' ? `This is ${userName}'s return visit. Greet briefly WITHOUT repeating their name: "Welcome back! Great to see you again."` : ''}
+${!isReturning && userName !== 'Guest' ? `New user named ${userName}. Greet them ONCE with name: "Hi ${userName}! Welcome to Relocation Quest."` : ''}
 ${userName === 'Guest' ? `Unknown user. Greet them: "Hi there! I'm ATLAS, your relocation advisor."` : ''}
+IMPORTANT: After the first greeting, NEVER say "Hi ${userName}" or "Hello ${userName}" again. Just continue the conversation naturally.
 
 IDENTITY:
 - You ARE ATLAS, an expert relocation advisor
@@ -218,6 +219,7 @@ function VoiceChatSyncInner({
 
     // Fetch Zep context if user is logged in (matches fractional.quest pattern)
     let zepContext = '';
+    let zepHasHistory = false;  // Tracks if user has prior conversation history in Zep
     if (userContext?.userId) {
       debug('Zep', `Fetching context for userId: ${userContext.userId}`);
       try {
@@ -229,13 +231,24 @@ function VoiceChatSyncInner({
         } else {
           debug('Zep', 'No context found for user');
         }
+        // Check if Zep indicates this is a returning user
+        if (zepData.hasHistory) {
+          zepHasHistory = true;
+          debug('Zep', 'User has prior conversation history (returning user)');
+        }
       } catch (e) {
         debug('Zep', 'Failed to fetch context', e);
       }
     }
 
     // Build system prompt with user context AND Zep memory
-    const systemPrompt = buildSystemPrompt(userContext, pageContext, zepContext);
+    // Override isReturningUser if Zep shows prior history
+    const effectiveReturning = zepHasHistory || userContext?.isReturningUser || false;
+    const systemPrompt = buildSystemPrompt(
+      { ...userContext, isReturningUser: effectiveReturning },
+      pageContext,
+      zepContext
+    );
 
     // Session ID with name for backend tracking (stable ID for returning users)
     const sessionIdWithName = userContext?.userId
