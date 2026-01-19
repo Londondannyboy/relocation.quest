@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { CopilotSidebar } from '@copilotkit/react-ui';
-import { useCopilotAction, useCopilotReadable, useCopilotChat } from '@copilotkit/react-core';
+import { useCopilotAction, useCopilotReadable, useCopilotChat, useRenderToolCall } from '@copilotkit/react-core';
 import { Role, TextMessage } from '@copilotkit/runtime-client-gql';
 import { motion } from 'framer-motion';
 import { DynamicView, GeneratedView, ViewBlock } from '@/components/DynamicView';
@@ -868,6 +868,125 @@ This creates dynamic, tailored visualizations based on the user's specific quest
       return <></>;
     },
   });
+
+  // AG-UI: Render when agent's backend show_destination_card tool is called
+  // This syncs the backend tool result with the frontend UI
+  useRenderToolCall({
+    name: "show_destination_card",
+    render: ({ result, status }) => {
+      // Show loading state
+      if (status !== "complete" || !result) {
+        return (
+          <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded animate-pulse">
+            Loading destination...
+          </div>
+        );
+      }
+
+      // If destination not found, show message
+      if (!result.found) {
+        return (
+          <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded">
+            {result.message || `No data found for ${result.destination}`}
+          </div>
+        );
+      }
+
+      // Update the main view state with the destination data from backend tool
+      // Use setTimeout to avoid state update during render
+      setTimeout(() => {
+        const bgImage = result.hero_image_url;
+        const bgGradient = 'from-black/70 to-black/50';
+
+        // Build a GeneratedView from the backend result
+        const blocks: ViewBlock[] = [];
+
+        // Quick facts as KPI blocks
+        if (result.quick_facts?.length > 0) {
+          result.quick_facts.slice(0, 6).forEach((f: { icon: string; label: string; value: string }) => {
+            blocks.push({
+              type: 'kpi',
+              props: {
+                icon: f.icon,
+                label: f.label,
+                value: f.value,
+              },
+            });
+          });
+        }
+
+        // Highlights as info card
+        if (result.highlights?.length > 0) {
+          blocks.push({
+            type: 'info_card',
+            props: {
+              title: 'Why Move Here?',
+              variant: 'highlight',
+              items: result.highlights.slice(0, 5).map((h: string | { text: string }) => ({
+                label: '✓',
+                value: typeof h === 'string' ? h : h.text,
+              })),
+            },
+          });
+        }
+
+        // Visa options
+        if (result.visas?.length > 0) {
+          blocks.push({
+            type: 'text',
+            props: {
+              title: 'Visa Options',
+              content: result.visas.slice(0, 3).map((v: { name: string; description?: string }) =>
+                `**${v.name}**: ${v.description || 'Available'}`
+              ).join('\n\n'),
+            },
+          });
+        }
+
+        // Cost of living
+        if (result.cost_of_living?.length > 0) {
+          const city = result.cost_of_living[0];
+          if (city.rent1BRCenter) {
+            blocks.push({
+              type: 'cost_chart',
+              props: {
+                title: `Monthly Costs in ${city.cityName || result.destination}`,
+                currency: city.currency || 'EUR',
+                items: [
+                  { label: 'Rent (1BR)', amount: city.rent1BRCenter || 0, currency: city.currency || 'EUR' },
+                  { label: 'Groceries', amount: city.groceries || 0, currency: city.currency || 'EUR' },
+                  { label: 'Dining', amount: city.dining || 0, currency: city.currency || 'EUR' },
+                  { label: 'Transport', amount: city.transportation || 0, currency: city.currency || 'EUR' },
+                ].filter(i => i.amount > 0),
+              },
+            });
+          }
+        }
+
+        const view: GeneratedView = {
+          title: `${result.flag} ${result.destination}`,
+          subtitle: result.hero_subtitle || result.region,
+          blocks,
+        };
+
+        setState(prev => ({
+          ...prev,
+          currentDestination: undefined,
+          customView: view,
+          backgroundImage: bgImage,
+          backgroundGradient: bgGradient,
+          currentCountry: result.destination,
+        }));
+      }, 0);
+
+      // Return the rendered UI shown in chat
+      return (
+        <div className="text-emerald-400 text-sm p-2 bg-emerald-500/10 rounded">
+          ✓ Showing {result.flag} {result.destination}
+        </div>
+      );
+    },
+  }, [setState]);
 
   // Direct destination loading when clicking pills (more reliable than chat-based)
   const handleTopicClick = useCallback(async (country: string) => {
