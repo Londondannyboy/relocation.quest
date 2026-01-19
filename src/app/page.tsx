@@ -597,16 +597,17 @@ export default function Home() {
     value: state,
   });
 
-  // Action: Show destination card (name matches agent's show_destination_card tool)
+  // Action: Update destination view - FRONTEND ACTION (unique name to avoid conflict with agent backend tool)
+  // The agent should call this to update the UI, not its own show_destination_card backend tool
   useCopilotAction({
-    name: "show_destination_card",
-    description: "REQUIRED: Show destination details when user asks about a country. Call this whenever a country is mentioned.",
+    name: "update_destination_view",
+    description: "FRONTEND ACTION: Update the main content area with a destination dashboard. Call this to show destination details to the user.",
     parameters: [
       { name: "destination", type: "string" as const, description: "Country name or slug (e.g., 'Portugal', 'portugal', 'Spain')" },
     ],
     handler: async ({ destination }) => {
-      const country = destination; // Agent passes 'destination', we use it as country
-      console.log('🌍 show_destination_card called for:', country);
+      const country = destination;
+      console.log('🌍 update_destination_view called for:', country);
 
       try {
         const slug = country.toLowerCase().replace(/\s+/g, '-');
@@ -1006,11 +1007,12 @@ This creates dynamic, tailored visualizations based on the user's specific quest
 
 YOU HAVE EXTENSIVE DATA including: climate info, cost of living, visa requirements, digital nomad programs, healthcare systems, tax regimes, dining/nightlife, quality of life scores, and relocation timelines for each country.
 
-CRITICAL RULES:
+## FRONTEND ACTIONS (call these to update what the user sees)
 
-1. SINGLE DESTINATION: When a user mentions ONE country, ALWAYS call show_destination:
-   - User: "Tell me about Cyprus" → show_destination(country: "Cyprus")
-   - User: "What do you know about Portugal?" → show_destination(country: "Portugal")
+1. SINGLE DESTINATION: When a user mentions ONE country, ALWAYS call update_destination_view:
+   - User: "Tell me about Cyprus" → update_destination_view(destination: "Cyprus")
+   - User: "Cyprus" → update_destination_view(destination: "Cyprus")
+   - User: "What do you know about Portugal?" → update_destination_view(destination: "Portugal")
    This displays a comprehensive dashboard with timeline, climate, dining, quality of life, and more.
 
 2. COMPARISONS: When user wants to COMPARE countries:
@@ -1024,6 +1026,8 @@ CRITICAL RULES:
 
 5. PREFERENCES: Call save_preferences when users mention budget, climate, or purpose.
 
+IMPORTANT: When the user types just a country name like "Cyprus" or "Portugal", IMMEDIATELY call update_destination_view with that destination. Do not just respond with text - UPDATE THE UI.
+
 DATA AVAILABLE FOR EACH COUNTRY:
 - Climate: seasons, temperatures, sunshine hours, best months to visit
 - Cost of Living: rent, groceries, dining, transportation, utilities
@@ -1033,7 +1037,7 @@ DATA AVAILABLE FOR EACH COUNTRY:
 - Quality of Life: safety index, expat friendliness, climate rating
 - Relocation Timeline: step-by-step guide with resources and links
 
-Be conversational and helpful. After showing a dashboard, point out specific interesting data points.`}
+Be conversational and helpful. After calling update_destination_view, briefly point out interesting data points.`}
           labels={{
             title: 'Chat with ATLAS',
             initial: "Hello! I'm ATLAS, your AI relocation advisor. I can help you explore destinations worldwide with real data on visas, costs, and more.\n\nClick a destination below or tell me what you're looking for!",
