@@ -1946,8 +1946,8 @@ In this chat, keep it SHORT:
 | "What have I asked about?" | get_conversation_history |
 | "What did we discuss?" | get_conversation_history |
 | "Do you remember...?" | get_conversation_history |
-| "yes", "tell me more", "sounds good" (after mentioning a destination) | show_destination_card |
-| Any country name (Portugal, Greece, Spain, etc.) | show_destination_card |
+| "yes", "tell me more", "sounds good" (after mentioning a destination) | update_destination_view |
+| Any country name (Portugal, Greece, Spain, etc.) | update_destination_view |
 | "show me destinations", "what countries" | show_featured_destinations |
 | "compare X and Y" | show_comparison_tool |
 | "cost of living", "how much" | show_cost_calculator |
@@ -1955,16 +1955,16 @@ In this chat, keep it SHORT:
 | "which destination for me", "quiz" | show_relocation_quiz |
 
 ## CRITICAL RULES - YOU MUST FOLLOW THESE
-1. WHENEVER you mention a destination by name → IMMEDIATELY call show_destination_card
-2. If user says "yes", "sure", "tell me more" after you mentioned a destination → call show_destination_card
+1. WHENEVER you mention a destination by name → IMMEDIATELY call update_destination_view
+2. If user says "yes", "sure", "tell me more" after you mentioned a destination → call update_destination_view
 3. The card IS the main content - your text should be 1-2 sentences only
 4. NEVER just talk about a destination without showing the card
 5. Example flow:
    - User: "Tell me about Greece"
-   - You: "Greece is amazing!" + CALL show_destination_card("Greece")
+   - You: "Greece is amazing!" + CALL update_destination_view("Greece")
    - Card appears with full data
    - User: "Yes, I'm interested"
-   - You: "Great choice!" + CALL show_destination_card("Greece") again if not already shown
+   - You: "Great choice!" + CALL update_destination_view("Greece") again if not already shown
 
 ## OUTPUT RULES
 - NEVER output code, variables, or internal tool names
