@@ -160,6 +160,22 @@ export function HumeWidget() {
     console.log('[HumeWidget Auth] ================================')
   }, [authPending, session, user, isAuthenticated, userId, userName])
 
+  // Stable callbacks for debugging voice connection - MUST be before any early returns
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleVoiceError = useCallback((err: any) => {
+    console.error("🔴 [Hume] Connection error:", err?.message || err)
+    setError(err?.message || 'Voice connection failed')
+  }, [])
+
+  const handleVoiceOpen = useCallback(() => {
+    console.log("🟢 [Hume] WebSocket connected successfully")
+  }, [])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleVoiceClose = useCallback((e: any) => {
+    console.log("🟡 [Hume] WebSocket closed:", e?.code, e?.reason)
+  }, [])
+
   useEffect(() => {
     fetch('/api/hume-token')
       .then(res => res.json())
@@ -192,22 +208,6 @@ export function HumeWidget() {
       </div>
     )
   }
-
-  // Stable callbacks for debugging voice connection
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleVoiceError = useCallback((err: any) => {
-    console.error("🔴 [Hume] Connection error:", err?.message || err)
-    setError(err?.message || 'Voice connection failed')
-  }, [])
-
-  const handleVoiceOpen = useCallback(() => {
-    console.log("🟢 [Hume] WebSocket connected successfully")
-  }, [])
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleVoiceClose = useCallback((e: any) => {
-    console.log("🟡 [Hume] WebSocket closed:", e?.code, e?.reason)
-  }, [])
 
   return (
     <VoiceProvider
