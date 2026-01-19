@@ -597,15 +597,16 @@ export default function Home() {
     value: state,
   });
 
-  // Action: Show destination
+  // Action: Show destination card (name matches agent's show_destination_card tool)
   useCopilotAction({
-    name: "show_destination",
+    name: "show_destination_card",
     description: "REQUIRED: Show destination details when user asks about a country. Call this whenever a country is mentioned.",
     parameters: [
-      { name: "country", type: "string" as const, description: "Country name or slug (e.g., 'Portugal', 'portugal', 'Spain')" },
+      { name: "destination", type: "string" as const, description: "Country name or slug (e.g., 'Portugal', 'portugal', 'Spain')" },
     ],
-    handler: async ({ country }) => {
-      console.log('🌍 show_destination called for:', country);
+    handler: async ({ destination }) => {
+      const country = destination; // Agent passes 'destination', we use it as country
+      console.log('🌍 show_destination_card called for:', country);
 
       try {
         const slug = country.toLowerCase().replace(/\s+/g, '-');

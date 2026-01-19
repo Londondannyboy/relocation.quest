@@ -193,8 +193,28 @@ export function HumeWidget() {
     )
   }
 
+  // Stable callbacks for debugging voice connection
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleVoiceError = useCallback((err: any) => {
+    console.error("🔴 [Hume] Connection error:", err?.message || err)
+    setError(err?.message || 'Voice connection failed')
+  }, [])
+
+  const handleVoiceOpen = useCallback(() => {
+    console.log("🟢 [Hume] WebSocket connected successfully")
+  }, [])
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleVoiceClose = useCallback((e: any) => {
+    console.log("🟡 [Hume] WebSocket closed:", e?.code, e?.reason)
+  }, [])
+
   return (
-    <VoiceProvider>
+    <VoiceProvider
+      onError={handleVoiceError}
+      onOpen={handleVoiceOpen}
+      onClose={handleVoiceClose}
+    >
       <VoiceWidget accessToken={accessToken} userName={userName} userId={userId} isAuthenticated={isAuthenticated} />
     </VoiceProvider>
   )
