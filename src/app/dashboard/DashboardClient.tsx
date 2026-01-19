@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CopilotSidebar } from '@copilotkit/react-ui';
 import { useCopilotReadable, useCopilotAction, useHumanInTheLoop } from '@copilotkit/react-core';
 import { authClient } from '@/lib/auth/client';
-import { HumeWidget } from '@/components/HumeWidget';
+import { VoiceChatProvider, SyncedVoiceButton } from '@/components/voice/VoiceChatSync';
 
 interface User {
   id: string;
@@ -771,6 +771,11 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
         </div>
       </header>
 
+      {/* Voice Button - Center Top */}
+      <div className="flex justify-center py-4 bg-gradient-to-b from-slate-100 to-slate-50">
+        <SyncedVoiceButton />
+      </div>
+
       <div className="flex">
         {/* Main Content */}
         <main className="flex-1 p-8">
@@ -996,7 +1001,7 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
               </div>
               <div className="flex-1 overflow-hidden">
                 <CopilotSidebar
-                  defaultOpen={true}
+                  defaultOpen={false}
                   labels={{
                     title: 'ATLAS - Your Advisor',
                     initial: profile.onboarding_completed
@@ -1044,10 +1049,6 @@ Never ask for user ID - you already have it.`}
         </aside>
       </div>
 
-      {/* Voice Widget - Fixed Bottom Left */}
-      <div className="fixed bottom-6 left-6 z-50">
-        <HumeWidget />
-      </div>
     </div>
   );
 }
@@ -1161,5 +1162,14 @@ export default function DashboardClient() {
     );
   }
 
-  return <Dashboard user={user} profile={profile || DEMO_PROFILE} onEditProfile={() => setShowOnboarding(true)} />;
+  return (
+    <VoiceChatProvider
+      userName={user.name || undefined}
+      userId={user.id}
+      persona={profile?.persona || undefined}
+      isReturningUser={profile?.onboarding_completed}
+    >
+      <Dashboard user={user} profile={profile || DEMO_PROFILE} onEditProfile={() => setShowOnboarding(true)} />
+    </VoiceChatProvider>
+  );
 }
