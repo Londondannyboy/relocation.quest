@@ -426,11 +426,108 @@ function OnboardingWizard({
   );
 }
 
+// Editable Field Component
+function EditableField({
+  label,
+  value,
+  onSave,
+  type = 'text',
+  options,
+}: {
+  label: string;
+  value: string | number | null;
+  onSave: (value: string | number) => Promise<void>;
+  type?: 'text' | 'select' | 'number';
+  options?: Array<{ value: string; label: string }>;
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(String(value || ''));
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    await onSave(type === 'number' ? Number(editValue) : editValue);
+    setSaving(false);
+    setIsEditing(false);
+  };
+
+  if (isEditing) {
+    return (
+      <div className="space-y-2">
+        <div className="text-xs text-slate-500">{label}</div>
+        <div className="flex gap-2">
+          {type === 'select' && options ? (
+            <select
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+            >
+              <option value="">Select...</option>
+              {options.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type={type === 'number' ? 'number' : 'text'}
+              value={editValue}
+              onChange={(e) => setEditValue(e.target.value)}
+              className="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              autoFocus
+            />
+          )}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-3 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+          >
+            {saving ? '...' : '✓'}
+          </button>
+          <button
+            onClick={() => setIsEditing(false)}
+            className="px-3 py-2 border border-slate-300 hover:border-slate-400 text-slate-600 rounded-lg text-sm"
+          >
+            ✕
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="group flex items-center justify-between">
+      <div>
+        <div className="text-xs text-slate-500">{label}</div>
+        <div className="text-slate-900">{value || 'Not set'}</div>
+      </div>
+      <button
+        onClick={() => {
+          setEditValue(String(value || ''));
+          setIsEditing(true);
+        }}
+        className="opacity-0 group-hover:opacity-100 text-amber-600 hover:text-amber-700 text-xs font-medium transition-opacity"
+      >
+        Edit
+      </button>
+    </div>
+  );
+}
+
 // Main Dashboard Component
 function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: User; profile: UserProfile; onEditProfile: () => void }) {
   // Local profile state for live updates from HITL confirmations
   const [profile, setProfile] = useState<UserProfile>(initialProfile);
   const persona = PERSONAS.find((p) => p.id === profile.persona);
+
+  // Save field to API and update local state
+  const saveField = async (field: string, value: string | number) => {
+    await fetch('/api/user-profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ [field]: value }),
+    });
+    setProfile(prev => ({ ...prev, [field]: value }));
+  };
 
   // Make user profile readable to CopilotKit
   useCopilotReadable({
@@ -999,22 +1096,34 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
                 </div>
               </div>
 
-              {/* Preferences */}
+              {/* Preferences - Editable */}
               <div className="space-y-4">
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide">Preferences</h3>
                 <div className="space-y-3">
-                  <div>
-                    <div className="text-xs text-slate-500">Current Country</div>
-                    <div className="text-slate-900">{profile.current_country || 'Not set'}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-500">Timeline</div>
-                    <div className="text-slate-900 capitalize">{profile.timeline?.replace('-', ' ') || 'Not set'}</div>
-                  </div>
-                  <div>
-                    <div className="text-xs text-slate-500">Monthly Budget</div>
-                    <div className="text-slate-900">€{(profile.budget_monthly || 0).toLocaleString()}</div>
-                  </div>
+                  <EditableField
+                    label="Current Country"
+                    value={profile.current_country || null}
+                    onSave={(v) => saveField('current_country', v)}
+                  />
+                  <EditableField
+                    label="Timeline"
+                    value={profile.timeline || null}
+                    onSave={(v) => saveField('timeline', v)}
+                    type="select"
+                    options={[
+                      { value: 'asap', label: 'As soon as possible' },
+                      { value: '3-6months', label: '3-6 months' },
+                      { value: '6-12months', label: '6-12 months' },
+                      { value: '1-2years', label: '1-2 years' },
+                      { value: 'exploring', label: 'Just exploring' },
+                    ]}
+                  />
+                  <EditableField
+                    label="Monthly Budget (€)"
+                    value={profile.budget_monthly || null}
+                    onSave={(v) => saveField('budget_monthly', v)}
+                    type="number"
+                  />
                 </div>
               </div>
             </div>
