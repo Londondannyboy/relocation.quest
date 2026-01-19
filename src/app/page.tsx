@@ -869,9 +869,37 @@ This creates dynamic, tailored visualizations based on the user's specific quest
     },
   });
 
-  const handleTopicClick = useCallback((country: string) => {
-    appendMessage(new TextMessage({ content: `Tell me about ${country}`, role: Role.User }));
-  }, [appendMessage]);
+  // Direct destination loading when clicking pills (more reliable than chat-based)
+  const handleTopicClick = useCallback(async (country: string) => {
+    console.log('🌍 Pill clicked for:', country);
+    try {
+      const slug = country.toLowerCase().replace(/\s+/g, '-');
+      const res = await fetch(`/api/destinations?slug=${slug}`);
+
+      if (res.ok) {
+        const destination = await res.json();
+        const view = createDashboardView(destination);
+        const bgImage = destination.images?.hero || destination.hero_image_url;
+        const bgGradient = destination.images?.gradient || 'from-black/70 to-black/50';
+        setState(prev => ({
+          ...prev,
+          currentDestination: undefined,
+          customView: view,
+          backgroundImage: bgImage,
+          backgroundGradient: bgGradient,
+          currentCountry: destination.country_name,
+        }));
+        // Also send to chat for context
+        appendMessage(new TextMessage({ content: `Tell me about ${country}`, role: Role.User }));
+      } else {
+        // Fallback to chat-based approach
+        appendMessage(new TextMessage({ content: `Tell me about ${country}`, role: Role.User }));
+      }
+    } catch (error) {
+      console.error('Error loading destination:', error);
+      appendMessage(new TextMessage({ content: `Tell me about ${country}`, role: Role.User }));
+    }
+  }, [appendMessage, setState]);
 
   // Handle comparison picker
   const handleCompare = useCallback(async (country1: string, country2: string) => {

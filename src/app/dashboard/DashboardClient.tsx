@@ -14,6 +14,13 @@ interface User {
   name: string | null;
 }
 
+// Extract first name from full name (e.g., "Dan Keegan" -> "Dan")
+function getFirstName(fullName: string | null | undefined): string {
+  if (!fullName) return '';
+  const parts = fullName.trim().split(/\s+/);
+  return parts[0] || '';
+}
+
 interface UserProfile {
   id: string;
   user_id: string;
@@ -173,7 +180,7 @@ function OnboardingWizard({
               >
                 <span className="text-6xl mb-6 block">🌍</span>
                 <h2 className="text-3xl font-bold text-slate-900 mb-2">
-                  Welcome, {user.name || 'Explorer'}!
+                  Welcome, {getFirstName(user.name) || 'Explorer'}!
                 </h2>
                 <p className="text-slate-600 mb-8">
                   Let&apos;s set up your personalized relocation dashboard.
@@ -947,7 +954,7 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
         <main className="flex-1 p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-slate-900">
-              Welcome back, {user.name || 'Explorer'}!
+              Welcome back, {getFirstName(user.name) || 'Explorer'}!
             </h1>
             <p className="text-slate-600 mt-1">Here&apos;s your personalized relocation dashboard</p>
           </div>
@@ -1212,14 +1219,14 @@ function Dashboard({ user, profile: initialProfile, onEditProfile }: { user: Use
                   labels={{
                     title: 'ATLAS - Your Advisor',
                     initial: profile.onboarding_completed
-                      ? `Hi ${user.name || 'there'}! I've reviewed your profile and I'm ready to help you plan your relocation.\n\nBased on your preferences, I can help you with:\n• Comparing destinations\n• Understanding visa options\n• Estimating costs\n• Planning your timeline\n\nWhat would you like to explore?`
-                      : `Hi ${user.name || 'there'}! Welcome to Relocation Quest. I'm ATLAS, your AI relocation advisor.\n\nLet's get to know each other so I can give you personalized advice. Tell me a bit about yourself:\n\n• What brings you here - relocating a company, seeking a new lifestyle, or something else?\n• Where are you currently based?\n• What destinations interest you?\n\nJust tell me naturally, and I'll confirm each detail with you.`,
+                      ? `Hi ${getFirstName(user.name) || 'there'}! I've reviewed your profile and I'm ready to help you plan your relocation.\n\nBased on your preferences, I can help you with:\n• Comparing destinations\n• Understanding visa options\n• Estimating costs\n• Planning your timeline\n\nWhat would you like to explore?`
+                      : `Hi ${getFirstName(user.name) || 'there'}! Welcome to Relocation Quest. I'm ATLAS, your AI relocation advisor.\n\nLet's get to know each other so I can give you personalized advice. Tell me a bit about yourself:\n\n• What brings you here - relocating a company, seeking a new lifestyle, or something else?\n• Where are you currently based?\n• What destinations interest you?\n\nJust tell me naturally, and I'll confirm each detail with you.`,
                   }}
                   instructions={`You are ATLAS, an expert relocation advisor.
 
 CRITICAL USER CONTEXT:
 - User ID: ${user.id}
-- User Name: ${user.name || 'Unknown'}
+- User Name: ${getFirstName(user.name) || 'Unknown'}
 - User Email: ${user.email}
 - Current Persona: ${profile.persona || 'Not set'}
 - Current Country: ${profile.current_country || 'Not set'}
@@ -1391,7 +1398,7 @@ export default function DashboardClient() {
 
   return (
     <VoiceChatProvider
-      userName={user.name || undefined}
+      userName={getFirstName(user.name) || undefined}
       userId={user.id}
       persona={profile?.persona || undefined}
       isReturningUser={profile?.onboarding_completed}
