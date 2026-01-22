@@ -54,6 +54,14 @@ Single-page conversational AI relocation advisor. CopilotKit Next.js runtime wit
 | `save_preferences` | Save user budget/climate/purpose |
 | `generate_custom_view` | AI-composed MDX layouts (comparison, cost breakdown, pros/cons) |
 
+## AG-UI Render Tool Calls (useRenderToolCall)
+
+Following the fractional.quest pattern, these hooks listen for backend tool calls and update the UI:
+
+| Tool | Purpose |
+|------|---------|
+| `show_destination_card` | When agent's backend tool is called, updates main view with destination data |
+
 ## HITL Tools (useHumanInTheLoop) - Dashboard
 
 | Tool | Purpose |
@@ -665,3 +673,24 @@ useHumanInTheLoop({
 - `src/components/voice/VoiceChatSync.tsx` - Returning user detection from Zep
 - `src/app/api/zep-context/route.ts` - hasHistory flag
 - `agent/src/agent.py` - update_destination_view instructions, greeting logic
+
+### Session Log (Jan 19, 2026) - AG-UI Pattern Implementation
+
+**Following fractional.quest Pattern:**
+
+9. **useRenderToolCall for Backend Tools**
+   - Added `useRenderToolCall` hook for `show_destination_card` backend tool
+   - When agent's backend tool is called, it now:
+     - Shows loading indicator in chat
+     - Updates main view state with destination data
+     - Shows success confirmation
+   - This complements the `update_destination_view` frontend action
+   - Pattern matches fractional.quest's AG-UI integration
+
+**How It Works:**
+- `useCopilotAction` (`update_destination_view`) = Frontend action the agent can call directly
+- `useRenderToolCall` (`show_destination_card`) = Renders UI when backend tool returns data
+- Both mechanisms now work, ensuring reliable destination display
+
+**Files Modified:**
+- `src/app/page.tsx` - Added useRenderToolCall for show_destination_card

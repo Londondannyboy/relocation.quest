@@ -58,11 +58,14 @@ Relocation Quest is a conversational AI relocation advisor built with:
 
 ### HIGH PRIORITY
 
-1. **CopilotKit Chat Not Calling Actions Reliably**
-   - When typing in chat (e.g., "Cyprus"), the AI sometimes just responds with text instead of calling `update_destination_view`
-   - The Railway agent may not be properly forwarding action calls back to CopilotKit
-   - Need to investigate AG-UI protocol between CopilotKit and Railway agent
-   - **Workaround**: Pills now work via direct API fetch
+1. **CopilotKit Chat Not Calling Actions Reliably** - PARTIALLY FIXED
+   - Added `useRenderToolCall` for `show_destination_card` (following fractional.quest pattern)
+   - Now when agent's backend tool is called, UI updates via render hook
+   - **Both mechanisms now available:**
+     - `useCopilotAction` (`update_destination_view`) - Frontend action
+     - `useRenderToolCall` (`show_destination_card`) - Backend tool render
+   - **Workaround still works**: Pills directly fetch via API
+   - **To test**: Type "Cyprus" in chat and verify main view updates
 
 2. **Voice + Chat Not Fully Synced**
    - Voice goes through Hume → Railway CLM endpoint
