@@ -14,6 +14,13 @@ import {
   PropertyPrices,
   EducationGuide,
 } from './mdx';
+import {
+  CostBarChart,
+  BudgetPieChart,
+  QualityRadarChart,
+  TaxComparisonChart,
+  VisaTimelineChart,
+} from './charts';
 
 // Types for AI-generated views
 export interface ViewBlock {
@@ -31,7 +38,12 @@ export interface ViewBlock {
     | 'quality_of_life'
     | 'section_header'
     | 'property'
-    | 'education';
+    | 'education'
+    | 'cost_bar_chart'
+    | 'budget_pie'
+    | 'quality_radar'
+    | 'tax_comparison'
+    | 'visa_timeline';
   props: Record<string, unknown>;
 }
 
@@ -85,13 +97,16 @@ function getBlockColSpan(type: ViewBlock['type']): string {
   const fullWidthBlocks = [
     'comparison',
     'cost_chart',
+    'cost_bar_chart',
     'pros_cons',
     'timeline',
     'section_header',
+    'tax_comparison',
+    'visa_timeline',
   ];
 
   // Half-width blocks
-  const halfWidthBlocks = ['climate', 'restaurant', 'quality_of_life', 'property', 'education'];
+  const halfWidthBlocks = ['climate', 'restaurant', 'quality_of_life', 'quality_radar', 'budget_pie', 'property', 'education'];
 
   if (fullWidthBlocks.includes(type)) return 'lg:col-span-3';
   if (halfWidthBlocks.includes(type)) return 'lg:col-span-2 md:col-span-2';
@@ -326,6 +341,61 @@ function renderBlock(block: ViewBlock) {
             }>
           }
           notes={block.props.notes as string[]}
+        />
+      );
+
+    case 'cost_bar_chart':
+      return (
+        <CostBarChart
+          title={block.props.title as string}
+          items={block.props.items as Array<{ label: string; amount: number; currency?: string }>}
+          currency={block.props.currency as string}
+          compareItems={block.props.compareItems as Array<{ label: string; amount: number }> | undefined}
+          compareLabel={block.props.compareLabel as string | undefined}
+          primaryLabel={block.props.primaryLabel as string | undefined}
+        />
+      );
+
+    case 'budget_pie':
+      return (
+        <BudgetPieChart
+          title={block.props.title as string}
+          items={block.props.items as Array<{ label: string; amount: number; color?: string }>}
+          currency={block.props.currency as string}
+          persona={block.props.persona as string}
+        />
+      );
+
+    case 'quality_radar':
+      return (
+        <QualityRadarChart
+          title={block.props.title as string}
+          country={block.props.country as string}
+          flag={block.props.flag as string}
+          metrics={block.props.metrics as Array<{ label: string; value: number; maxValue?: number; icon?: string }>}
+          compareCountry={block.props.compareCountry as string | undefined}
+          compareFlag={block.props.compareFlag as string | undefined}
+          compareMetrics={block.props.compareMetrics as Array<{ label: string; value: number }> | undefined}
+          overallScore={block.props.overallScore as number}
+        />
+      );
+
+    case 'tax_comparison':
+      return (
+        <TaxComparisonChart
+          title={block.props.title as string}
+          countries={block.props.countries as Array<{ country: string; flag?: string; corporateTax: number; incomeTax: number; capitalGainsTax?: number; vat?: number }>}
+          persona={block.props.persona as string}
+        />
+      );
+
+    case 'visa_timeline':
+      return (
+        <VisaTimelineChart
+          title={block.props.title as string}
+          visas={block.props.visas as Array<{ name: string; processingDays: number; cost?: number; currency?: string; type?: string }>}
+          country={block.props.country as string}
+          flag={block.props.flag as string}
         />
       );
 

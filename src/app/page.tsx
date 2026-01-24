@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { CopilotSidebar } from '@copilotkit/react-ui';
 import { useCopilotAction, useCopilotReadable, useCopilotChat, useRenderToolCall } from '@copilotkit/react-core';
+import { ResponsiveCopilot } from '@/components/ResponsiveCopilot';
 import { Role, TextMessage } from '@copilotkit/runtime-client-gql';
 import { motion } from 'framer-motion';
 import { DynamicView, GeneratedView, ViewBlock } from '@/components/DynamicView';
@@ -556,6 +556,85 @@ function createDashboardView(destination: Destination): GeneratedView {
     });
   }
 
+  // === RECHARTS: COST BAR CHART (replaces simple bars with interactive chart) ===
+  if (primaryCity) {
+    blocks.push({
+      type: 'cost_bar_chart',
+      props: {
+        title: `Cost Comparison - ${primaryCity.cityName}`,
+        currency: primaryCity.currency || '\u20AC',
+        items: [
+          { label: 'Rent', amount: primaryCity.rent1BRCenter || 0 },
+          { label: 'Groceries', amount: primaryCity.groceries || 0 },
+          { label: 'Dining', amount: primaryCity.dining || 0 },
+          { label: 'Transport', amount: primaryCity.transportation || 0 },
+          { label: 'Utilities', amount: primaryCity.utilities || 0 },
+        ].filter(i => i.amount > 0),
+      },
+    });
+  }
+
+  // === RECHARTS: BUDGET PIE CHART ===
+  if (primaryCity) {
+    blocks.push({
+      type: 'budget_pie',
+      props: {
+        title: 'Monthly Budget Breakdown',
+        currency: primaryCity.currency || '\u20AC',
+        items: [
+          { label: 'Housing', amount: primaryCity.rent1BRCenter || 0 },
+          { label: 'Food & Dining', amount: (primaryCity.groceries || 0) + (primaryCity.dining || 0) },
+          { label: 'Transport', amount: primaryCity.transportation || 0 },
+          { label: 'Utilities', amount: primaryCity.utilities || 0 },
+        ].filter(i => i.amount > 0),
+      },
+    });
+  }
+
+  // === RECHARTS: QUALITY OF LIFE RADAR ===
+  if (destination.quality_of_life) {
+    const qol = destination.quality_of_life;
+    blocks.push({
+      type: 'quality_radar',
+      props: {
+        title: 'Quality of Life Radar',
+        country: destination.country_name,
+        flag: destination.flag,
+        overallScore: qol.overall_score,
+        metrics: [
+          { label: 'Safety', value: (qol.safety_index || 0) * 10, icon: '🛡️' },
+          { label: 'Affordability', value: Math.max(0, 100 - (qol.cost_of_living_index || 50)), icon: '💰' },
+          { label: 'Climate', value: (qol.climate_index || 0) * 10, icon: '☀️' },
+          { label: 'Expat Friendly', value: (qol.expat_friendly_index || 0) * 10, icon: '🌍' },
+          { label: 'Healthcare', value: (destination.healthcare?.quality_rating || 0) * 10, icon: '🏥' },
+        ].filter(m => m.value > 0),
+      },
+    });
+  }
+
+  // === RECHARTS: VISA TIMELINE ===
+  if (destination.visas && destination.visas.length > 0) {
+    blocks.push({
+      type: 'visa_timeline',
+      props: {
+        title: `${destination.flag} ${destination.country_name} Visa Options`,
+        country: destination.country_name,
+        flag: destination.flag,
+        visas: destination.visas.slice(0, 5).map(v => ({
+          name: v.name,
+          processingDays: parseInt(v.duration || '90') || 90,
+          cost: v.cost ? parseInt(v.cost.replace(/[^0-9]/g, '')) || undefined : undefined,
+          currency: '\u20AC',
+          type: v.name.toLowerCase().includes('nomad') ? 'nomad'
+            : v.name.toLowerCase().includes('golden') ? 'golden'
+            : v.name.toLowerCase().includes('work') ? 'work'
+            : v.name.toLowerCase().includes('invest') ? 'investor'
+            : 'other',
+        })),
+      },
+    });
+  }
+
   return {
     title: `${destination.flag} ${destination.country_name}`,
     subtitle: destination.hero_title,
@@ -569,6 +648,7 @@ export default function Home() {
   });
   const [loading, setLoading] = useState(true);
   const [comparingLoading, setComparingLoading] = useState(false);
+  const [lastLoadedDestination, setLastLoadedDestination] = useState<Destination | null>(null);
   const [showGraph, setShowGraph] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const { appendMessage } = useCopilotChat();
@@ -636,6 +716,7 @@ export default function Home() {
         // Set dynamic background from destination images
         const bgImage = destination.images?.hero || destination.hero_image_url;
         const bgGradient = destination.images?.gradient || 'from-black/70 to-black/50';
+        setLastLoadedDestination(destination);
         setState(prev => ({
           ...prev,
           currentDestination: undefined,
@@ -652,10 +733,42 @@ export default function Home() {
     },
     render: ({ status }) => {
       if (status === 'executing') {
-        return <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded">Loading destination from database...</div>;
+        return <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded animate-pulse">Loading destination data with charts...</div>;
+      }
+      if (status === 'complete' && lastLoadedDestination) {
+        const d = lastLoadedDestination;
+        const city = d.cost_of_living?.[0];
+        return (
+          <div className="bg-white/5 rounded-xl border border-white/10 p-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">{d.flag}</span>
+              <span className="font-semibold text-white text-sm">{d.country_name}</span>
+              {d.quality_of_life?.overall_score && (
+                <span className="ml-auto text-xs bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full">
+                  QoL: {d.quality_of_life.overall_score.toFixed(1)}/10
+                </span>
+              )}
+            </div>
+            {city && (
+              <div className="text-xs text-white/60">
+                Rent from {city.currency} {city.rent1BRCenter?.toLocaleString()}/mo in {city.cityName}
+              </div>
+            )}
+            {d.visas && d.visas.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {d.visas.slice(0, 3).map(v => (
+                  <span key={v.name} className="text-xs px-2 py-0.5 bg-cyan-500/20 text-cyan-300 rounded-full">{v.name}</span>
+                ))}
+              </div>
+            )}
+            <div className="text-xs text-emerald-400">
+              Dashboard loaded with interactive charts - scroll to see radar, bar charts, and more.
+            </div>
+          </div>
+        );
       }
       if (status === 'complete') {
-        return <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded">✓ Destination loaded!</div>;
+        return <div className="text-amber-400 text-sm p-2 bg-amber-500/10 rounded">Dashboard loaded with charts!</div>;
       }
       return <></>;
     },
@@ -1148,46 +1261,54 @@ This creates dynamic, tailored visualizations based on the user's specific quest
     >
       {/* Dark overlay for readability - always dark, not colored */}
       <div className="min-h-screen bg-black/60 backdrop-blur-[2px]">
-        <CopilotSidebar
-          defaultOpen={true}
+        <ResponsiveCopilot
           instructions={`You are ATLAS, a warm and knowledgeable relocation advisor with access to comprehensive data on ${availableCountries}.
 
 YOU HAVE EXTENSIVE DATA including: climate info, cost of living, visa requirements, digital nomad programs, healthcare systems, tax regimes, dining/nightlife, quality of life scores, and relocation timelines for each country.
 
-## FRONTEND ACTIONS (call these to update what the user sees)
+## CRITICAL: ALWAYS UPDATE THE UI
 
-1. SINGLE DESTINATION: When a user mentions ONE country, ALWAYS call update_destination_view:
-   - User: "Tell me about Cyprus" → update_destination_view(destination: "Cyprus")
-   - User: "Cyprus" → update_destination_view(destination: "Cyprus")
-   - User: "What do you know about Portugal?" → update_destination_view(destination: "Portugal")
-   This displays a comprehensive dashboard with timeline, climate, dining, quality of life, and more.
+When a user mentions ANY country or expresses intent to relocate somewhere, ALWAYS call update_destination_view IMMEDIATELY.
 
-2. COMPARISONS: When user wants to COMPARE countries:
-   - User: "Compare Cyprus vs Malta" → generate_custom_view(view_type: "comparison", countries: "Cyprus, Malta", focus: "all")
+Examples that should ALL trigger update_destination_view:
+- "I want to move to Cyprus" → update_destination_view(destination: "Cyprus")
+- "Tell me about Portugal" → update_destination_view(destination: "Portugal")
+- "Cyprus" → update_destination_view(destination: "Cyprus")
+- "I'm thinking of relocating to Spain" → update_destination_view(destination: "Spain")
+- "What's it like living in Thailand?" → update_destination_view(destination: "Thailand")
+- "We're considering Malta for our company" → update_destination_view(destination: "Malta")
+- "I want to retire in Greece" → update_destination_view(destination: "Greece")
 
-3. COST BREAKDOWN: When user asks about costs:
-   - User: "Show me cost breakdown for Lisbon" → generate_custom_view(view_type: "cost_breakdown", countries: "Portugal", focus: "cost")
+## PERSONA-AWARE RESPONSES
 
-4. PROS & CONS: When user asks about advantages/disadvantages:
-   - User: "Pros and cons of Spain?" → generate_custom_view(view_type: "pros_cons", countries: "Spain", focus: "lifestyle")
+When the user reveals their relocation type, tailor your commentary:
+- CORPORATE: Focus on corporate tax, IP box regimes, company formation, notable corporate relocations
+- HIGH NET WORTH: Focus on tax optimization, golden visas, property investment, wealth management
+- DIGITAL NOMAD: Focus on nomad visas, coworking, internet speed, community, income requirements
+- MEDICAL: Focus on healthcare quality, specialist availability, medical tourism, health insurance
+- FAMILY: Focus on international schools, safety, family-friendly areas, education quality
+- RETIREE: Focus on retirement visas, healthcare, cost of living, quality of life, climate
+- LIFESTYLE: Focus on culture, food, nightlife, beaches, adventure, social life
 
-5. PREFERENCES: Call save_preferences when users mention budget, climate, or purpose.
+After calling update_destination_view, provide BRIEF commentary highlighting the most relevant data points for the user's situation. The dashboard will show interactive charts (bar charts, pie charts, radar charts, visa timelines) alongside standard data.
 
-IMPORTANT: When the user types just a country name like "Cyprus" or "Portugal", IMMEDIATELY call update_destination_view with that destination. Do not just respond with text - UPDATE THE UI.
+## FRONTEND ACTIONS
 
-DATA AVAILABLE FOR EACH COUNTRY:
-- Climate: seasons, temperatures, sunshine hours, best months to visit
-- Cost of Living: rent, groceries, dining, transportation, utilities
-- Digital Nomad: visa requirements, income thresholds, coworking scene
-- Healthcare: system type, quality ratings, insurance costs
-- Dining: Michelin stars, signature dishes, best restaurants
-- Quality of Life: safety index, expat friendliness, climate rating
-- Relocation Timeline: step-by-step guide with resources and links
+1. SINGLE DESTINATION: update_destination_view(destination: "CountryName")
+   Shows comprehensive dashboard with Recharts visualizations.
 
-Be conversational and helpful. After calling update_destination_view, briefly point out interesting data points.`}
+2. COMPARISONS: generate_custom_view(view_type: "comparison", countries: "Cyprus, Malta", focus: "all")
+
+3. COST BREAKDOWN: generate_custom_view(view_type: "cost_breakdown", countries: "Portugal", focus: "cost")
+
+4. PROS & CONS: generate_custom_view(view_type: "pros_cons", countries: "Spain", focus: "lifestyle")
+
+5. PREFERENCES: save_preferences when users mention budget, climate, or purpose.
+
+IMPORTANT: NEVER just respond with text when a destination is mentioned. ALWAYS call update_destination_view first, THEN add brief commentary.`}
           labels={{
             title: 'Chat with ATLAS',
-            initial: "Hello! I'm ATLAS, your AI relocation advisor. I can help you explore destinations worldwide with real data on visas, costs, and more.\n\nClick a destination below or tell me what you're looking for!",
+            initial: "Hello! I'm ATLAS, your AI relocation advisor. Tell me where you'd like to move and I'll show you everything - costs, visas, quality of life, and more with interactive charts.\n\nTry: \"I want to move to Cyprus\" or click a destination below!",
           }}
           className="[&_.copilotKitSidebar]:bg-stone-900/80 [&_.copilotKitSidebar]:backdrop-blur-sm [&_.copilotKitSidebar]:border-white/10"
         >
@@ -1365,7 +1486,7 @@ Be conversational and helpful. After calling update_destination_view, briefly po
                           )}            </div>
           </div>
 
-        </CopilotSidebar>
+        </ResponsiveCopilot>
       </div>
     </div>
   );
