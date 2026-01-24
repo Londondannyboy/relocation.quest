@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { CopilotSidebar, CopilotPopup } from '@copilotkit/react-ui';
+import { CopilotSidebar } from '@copilotkit/react-ui';
 
 interface ResponsiveCopilotProps {
   children: React.ReactNode;
@@ -15,8 +15,8 @@ interface ResponsiveCopilotProps {
 
 /**
  * Responsive CopilotKit wrapper:
- * - Desktop (>=768px): CopilotSidebar with defaultOpen={false}
- * - Mobile (<768px): CopilotPopup (floating widget button)
+ * - Desktop (>=768px): CopilotSidebar (collapsed by default, user clicks to expand)
+ * - Mobile (<768px): No sidebar/popup - users use the main ChatInput bar on the page
  */
 export function ResponsiveCopilot({ children, instructions, labels, className }: ResponsiveCopilotProps) {
   const [isMobile, setIsMobile] = useState(false);
@@ -30,33 +30,17 @@ export function ResponsiveCopilot({ children, instructions, labels, className }:
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // SSR: render sidebar by default, switch on mount
+  // SSR: render children only, switch on mount
   if (!mounted) {
-    return (
-      <CopilotSidebar
-        defaultOpen={false}
-        instructions={instructions}
-        labels={labels}
-        className={className}
-      >
-        {children}
-      </CopilotSidebar>
-    );
+    return <>{children}</>;
   }
 
+  // Mobile: no sidebar, just children (users use the main ChatInput on the page)
   if (isMobile) {
-    return (
-      <>
-        {children}
-        <CopilotPopup
-          instructions={instructions}
-          labels={labels}
-          className="[&_.copilotKitPopup]:bg-stone-900/95 [&_.copilotKitPopup]:backdrop-blur-md [&_.copilotKitPopup]:border-white/10 [&_.copilotKitPopup]:max-h-[70vh]"
-        />
-      </>
-    );
+    return <>{children}</>;
   }
 
+  // Desktop: sidebar collapsed by default
   return (
     <CopilotSidebar
       defaultOpen={false}
