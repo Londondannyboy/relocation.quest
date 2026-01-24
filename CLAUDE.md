@@ -11,9 +11,11 @@ npm run dev -- -p 4000              # → localhost:4000
 
 ## Current Architecture
 
-Single-page conversational AI relocation advisor. CopilotKit Next.js runtime with Gemini adapter. All destination data from Neon PostgreSQL.
+Single-page conversational AI relocation advisor. CopilotKit Next.js runtime with **Google Gemini 2.0 Flash adapter**. All destination data from Neon PostgreSQL. Interactive Recharts visualizations (bar, pie, radar, timeline charts).
 
-**Pattern**: GTM-quest-v3 style - CopilotKit runtime inside Next.js API route, not separate Python backend.
+**Pattern**: CopilotKit runtime inside Next.js API route with GoogleGenerativeAIAdapter. Frontend actions (useCopilotAction) handle all UI updates. No external agent dependency.
+
+**Mobile**: No sidebar - users use the main ChatInput bar. Desktop: CopilotSidebar (collapsed by default).
 
 ---
 
@@ -36,13 +38,19 @@ Single-page conversational AI relocation advisor. CopilotKit Next.js runtime wit
 | Auth pages | `src/app/auth/[path]/page.tsx` |
 | Account pages | `src/app/account/[path]/page.tsx` |
 | Auth middleware | `middleware.ts` |
-| **Pydantic AI Agent (Railway)** | |
+| **Recharts Components** | |
+| Cost bar chart | `src/components/charts/CostBarChart.tsx` |
+| Budget pie chart | `src/components/charts/BudgetPieChart.tsx` |
+| Quality radar chart | `src/components/charts/QualityRadarChart.tsx` |
+| Tax comparison chart | `src/components/charts/TaxComparisonChart.tsx` |
+| Visa timeline chart | `src/components/charts/VisaTimelineChart.tsx` |
+| Charts index | `src/components/charts/index.ts` |
+| **Responsive UI** | |
+| Responsive copilot wrapper | `src/components/ResponsiveCopilot.tsx` |
+| **Pydantic AI Agent (Railway - LEGACY, not currently used)** | |
 | Agent entry point | `agent/src/agent.py` |
 | Database queries | `agent/src/database.py` |
-| Destination Expert sub-agent | `agent/src/destination_expert.py` |
-| Railway config | `agent/railway.toml` |
 | Railway URL | `https://relocation-quest-v3-agent-production.up.railway.app` |
-| CLM endpoint (for Hume) | `https://relocation-quest-v3-agent-production.up.railway.app/chat/completions` |
 
 ---
 
@@ -75,7 +83,7 @@ Following the fractional.quest pattern, these hooks listen for backend tool call
 
 ---
 
-## MDX Components (AI-composable)
+## MDX Components (AI-composable, Framer Motion)
 
 | Component | Purpose |
 |-----------|---------|
@@ -83,6 +91,23 @@ Following the fractional.quest pattern, these hooks listen for backend tool call
 | `CostChart` | Visual cost breakdown with animated bars |
 | `ProsCons` | Pros and cons two-column layout |
 | `InfoCard` | Info cards with variants (default, highlight, warning, success) |
+| `KPI` | Key metric display (icon + value + label) |
+| `RelocationTimeline` | Step-by-step relocation process |
+| `ClimateChart` | Seasonal breakdown with temperature bars |
+| `RestaurantGuide` | Dining & restaurant cards |
+| `QualityOfLifeRadar` | Quality metrics with progress bars |
+| `PropertyPrices` | Real estate prices by city |
+| `EducationGuide` | Schools & universities |
+
+## Recharts Components (Interactive Charts)
+
+| Component | Chart Type | Purpose |
+|-----------|-----------|---------|
+| `CostBarChart` | Bar chart | Cost of living items with tooltips |
+| `BudgetPieChart` | Pie chart | Monthly budget breakdown by category |
+| `QualityRadarChart` | Radar chart | Quality of life multi-axis comparison |
+| `TaxComparisonChart` | Grouped bar | Corporate/income/capital gains tax rates |
+| `VisaTimelineChart` | Horizontal bar | Visa processing times with labels |
 
 ---
 
@@ -127,26 +152,28 @@ Authentication powered by Neon Auth (`@neondatabase/auth`).
 
 ## Implementation Status
 
-- [x] Next.js 15 project setup
-- [x] CopilotKit Next.js runtime (Gemini adapter)
-- [x] useCopilotAction for show_destination, save_preferences
+- [x] Next.js 16 project setup
+- [x] CopilotKit Next.js runtime (GoogleGenerativeAIAdapter - Gemini 2.0 Flash)
+- [x] useCopilotAction for update_destination_view, save_preferences, generate_custom_view
 - [x] Neon database connection (17 destinations)
-- [x] MDX component library
+- [x] MDX component library (11 components)
+- [x] Recharts interactive charts (5 components: bar, pie, radar, grouped bar, horizontal bar)
 - [x] generate_custom_view action for dynamic compositions
-- [x] Visual demo of MDX capability
 - [x] Neon Auth (@neondatabase/auth)
 - [x] Hume voice widget
 - [x] Deploy to Vercel - https://relocation-quest-v3.vercel.app
-- [x] Pydantic AI agent deployed to Railway - https://relocation-quest-v3-agent-production.up.railway.app
-- [x] Chat uses built-in CopilotKit Next.js runtime (AG-UI compatibility issue with pydantic-ai)
-- [x] Voice uses Railway CLM endpoint (/chat/completions)
+- [x] Responsive UI: desktop sidebar, mobile ChatInput only
+- [x] Persona-aware instructions (corporate, HNW, nomad, medical, family, retiree, lifestyle)
+- [x] In-chat rendered destination summary cards
+- [x] DynamicView supports 17 block types (MDX + Recharts)
 
 ---
 
 ## Test Commands
 
 Try these in the chat:
-- "Tell me about Portugal" → shows DestinationCard
+- "I want to move to Cyprus" → shows full dashboard with Recharts visualizations
+- "Tell me about Portugal" → shows destination dashboard
 - "Compare Portugal vs Spain" → shows ComparisonTable
 - "Show me cost breakdown for Lisbon" → shows CostChart
 - "Pros and cons of moving to Thailand" → shows ProsCons
@@ -157,12 +184,15 @@ Try these in the chat:
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Next.js 15, React 19, TypeScript, Tailwind |
-| AI Chat | CopilotKit (Next.js runtime + Gemini adapter) |
+| Frontend | Next.js 16.1.1, React 19, TypeScript, Tailwind CSS 4 |
+| AI Chat | CopilotKit 1.50.1 (GoogleGenerativeAIAdapter - Gemini 2.0 Flash) |
+| Charts | Recharts (bar, pie, radar, line charts) |
 | Database | Neon PostgreSQL (@neondatabase/serverless) |
-| Animation | Framer Motion |
+| Animation | Framer Motion 12 |
+| Maps | Leaflet + react-leaflet, react-force-graph-2d |
 | Voice | Hume EVI (@humeai/voice-react) |
 | Auth | Neon Auth (@neondatabase/auth) |
+| Memory | Zep Cloud (@getzep/zep-cloud) |
 
 ---
 
@@ -694,3 +724,85 @@ useHumanInTheLoop({
 
 **Files Modified:**
 - `src/app/page.tsx` - Added useRenderToolCall for show_destination_card
+
+---
+
+## Phase 12: Recharts Generative UI & Mobile Fix
+
+### Session Log (Jan 24, 2026)
+
+**Problems Addressed:**
+1. Mobile: CopilotKit sidebar took over the entire page
+2. Chat not responding: "I want to move to Cyprus" produced no response
+3. No interactive charts - only Framer Motion animated bars
+4. Needed "shock and awe" demo with proper graphing library
+
+**Root Causes Found:**
+- `ExperimentalEmptyAdapter` + `HttpAgent` to Railway agent was failing silently
+- `agent="atlas"` in CopilotKit provider was routing to a non-functional Railway endpoint
+- No local LLM to interpret user messages and call frontend actions
+- CopilotKit sidebar `defaultOpen={true}` was overriding mobile layout
+
+**Fixes Implemented:**
+
+1. **CopilotKit Runtime: Gemini Direct**
+   - Replaced `ExperimentalEmptyAdapter` with `GoogleGenerativeAIAdapter`
+   - Uses Gemini 2.0 Flash to directly interpret messages and call frontend actions
+   - Removed `agent="atlas"` from CopilotKit provider
+   - Added `@google/generative-ai` dependency
+
+2. **Recharts Integration**
+   - Installed `recharts` library
+   - Created 5 chart components in `src/components/charts/`:
+     - `CostBarChart` - Interactive cost of living bar chart
+     - `BudgetPieChart` - Monthly budget pie chart
+     - `QualityRadarChart` - Quality of life radar/spider chart
+     - `TaxComparisonChart` - Tax rate grouped bar chart
+     - `VisaTimelineChart` - Visa processing horizontal bar chart
+   - Updated `DynamicView.tsx` with 5 new block types
+   - `createDashboardView()` now generates both MDX + Recharts blocks
+
+3. **Mobile Responsiveness**
+   - Created `ResponsiveCopilot.tsx` wrapper component
+   - Mobile (<768px): No sidebar/popup, users use main ChatInput bar
+   - Desktop (>=768px): CopilotSidebar, collapsed by default
+
+4. **Enhanced AI Instructions**
+   - Explicit pattern matching for relocation intent phrases
+   - "I want to move to Cyprus" → `update_destination_view`
+   - Persona-aware commentary (corporate, HNW, nomad, medical, family, retiree, lifestyle)
+   - In-chat rendered mini destination cards with key metrics
+
+5. **DynamicView Block Types (17 total)**
+   - MDX: comparison, cost_chart, pros_cons, info_card, text, heading, kpi, timeline, climate, restaurant, quality_of_life, section_header, property, education
+   - Recharts: cost_bar_chart, budget_pie, quality_radar, tax_comparison, visa_timeline
+
+**Files Created:**
+- `src/components/charts/CostBarChart.tsx`
+- `src/components/charts/BudgetPieChart.tsx`
+- `src/components/charts/QualityRadarChart.tsx`
+- `src/components/charts/TaxComparisonChart.tsx`
+- `src/components/charts/VisaTimelineChart.tsx`
+- `src/components/charts/index.ts`
+- `src/components/ResponsiveCopilot.tsx`
+
+**Files Modified:**
+- `src/app/api/copilotkit/route.ts` - GoogleGenerativeAIAdapter replaces ExperimentalEmptyAdapter
+- `src/components/providers.tsx` - Removed agent="atlas"
+- `src/app/page.tsx` - ResponsiveCopilot, enhanced instructions, Recharts blocks, in-chat render
+- `src/components/DynamicView.tsx` - 5 new Recharts block types
+- `package.json` - Added recharts, @google/generative-ai
+
+**Vercel Environment:**
+- `GOOGLE_API_KEY` confirmed set on Production
+
+---
+
+## Known Issues / Next Steps
+
+- [ ] Verify Recharts graphics render on live Vercel deployment
+- [ ] Railway Pydantic AI agent is LEGACY - not currently used
+- [ ] Voice (Hume EVI) still routes to Railway CLM endpoint - may need fixing
+- [ ] Tax comparison data not in database yet (could add to destination schema)
+- [ ] Consider adding more chart types (line charts for trends, area charts)
+- [ ] Dashboard HITL tools still reference Railway agent patterns
