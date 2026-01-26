@@ -14,6 +14,7 @@ import os
 
 # Configure Google Generative AI API key globally BEFORE pydantic-ai imports
 # pydantic-ai uses google-genai SDK which reads from GOOGLE_API_KEY or GEMINI_API_KEY
+print("[ATLAS BUILD 1769430006] Starting up...", file=__import__('sys').stderr)
 _google_api_key = os.environ.get("GOOGLE_API_KEY", "")
 if _google_api_key:
     # Set both env vars that google-genai SDK might look for

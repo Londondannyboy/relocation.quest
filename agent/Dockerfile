@@ -17,3 +17,4 @@ ENV PORT=8000
 
 # Start command using shell to interpret $PORT
 CMD uvicorn src.agent:app --host 0.0.0.0 --port $PORT
+# Force rebuild: Mon 26 Jan 2026 12:52:39 GMT
