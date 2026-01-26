@@ -11,6 +11,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import os
+
+# Configure Google Generative AI API key globally BEFORE pydantic-ai imports
+# pydantic-ai uses google-genai SDK which reads from GOOGLE_API_KEY or GEMINI_API_KEY
+_google_api_key = os.environ.get("GOOGLE_API_KEY", "")
+if _google_api_key:
+    # Set both env vars that google-genai SDK might look for
+    os.environ["GEMINI_API_KEY"] = _google_api_key
+    os.environ["GOOGLE_GENAI_API_KEY"] = _google_api_key
+    print(f"[ATLAS] Google API key set in env ({_google_api_key[:10]}...)", file=__import__('sys').stderr)
+else:
+    print("[ATLAS] Warning: GOOGLE_API_KEY not set", file=__import__('sys').stderr)
 import sys
 import json
 import uuid
@@ -1739,7 +1750,20 @@ tax implications, cost of living, and quality of life factors. Where are you thi
             # Create a temporary agent with the dynamic prompt
             # Use Groq for faster voice responses, fallback to Gemini
             groq_key = os.environ.get("GROQ_API_KEY", "")
-            model = 'groq:llama-3.1-8b-instant' if groq_key else 'google-gla:gemini-2.0-flash'
+            google_key = os.environ.get("GOOGLE_API_KEY", "")
+
+            if groq_key:
+                model = 'groq:llama-3.1-8b-instant'
+            else:
+                # Create GeminiModel with explicit API key via provider
+                from pydantic_ai.models.gemini import GeminiModel
+                from pydantic_ai.providers.google_gla import GoogleGLAProvider
+                # Hardcoded API key for testing - REMOVE AFTER TESTING
+                hardcoded_key = "AIzaSyDC59O4vDxPW0pQvdrihxKZkJ0diBuKvDE"
+                provider = GoogleGLAProvider(api_key=hardcoded_key)
+                model = GeminiModel('gemini-2.0-flash', provider=provider)
+                print(f"[ATLAS CLM] HARDCODED KEY TEST - Using Gemini with hardcoded API key", file=sys.stderr)
+
             temp_agent = Agent(
                 model,
                 deps_type=ATLASDeps,
